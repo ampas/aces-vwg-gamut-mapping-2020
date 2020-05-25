@@ -1,0 +1,6 @@
+[submodule "repositories/colour-science/gamut-mapping-ramblings"]
+	path = repositories/colour-science/gamut-mapping-ramblings
+	url = https://github.com/colour-science/gamut-mapping-ramblings
+[submodule "repositories/jedypod/gamut-compress"]
+	path = repositories/jedypod/gamut-compress
+	url = https://github.com/jedypod/gamut-compress

@@ -6,34 +6,65 @@ The Virtual Working Group proposal can be read in this [document](https://commun
 
 A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central location for sharing resources.
 
-## Repositories
+## Gamut Mapping Study Models
 
-As of this writing, *colour-science* and *jedypod* implementations do not reach parity and will yield different results because of variation in the parameterisation of the implemented gamut mapping study models.
+The following gamut study models are available:
 
-The following repositories are available in alphabetical order:
+### Smith (2020) - RGB Saturation Study Model
 
-### [colour-science/gamut-mapping-ramblings](https://github.com/colour-science/gamut-mapping-ramblings)
+The [Smith (2020) - RGB Saturation Study Model](https://community.acescentral.com/t/rgb-saturation-gamut-mapping-approach-and-a-comp-vfx-perspective/) is the current focus of the Virtual Working Group.
 
-![Gamut Medicina 01](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_01.png)
+It is built on top of the [RGB colourspace](https://en.wikipedia.org/wiki/Color_spaces_with_RGB_primaries) with the following approach:
 
-Provides various Python Jupyter Notebooks with implementation of the following gamut mapping study model(s):
+- An achromatic axis is computed for the scene-referred RGB exposure values.
+- The pseudo-distance between the individual 𝑅, 𝐺 and 𝐵 components and the achromatic axis is compressed with a cherry-picked compression function.
 
-- [Mansencal and Scharfenberg (2020) HSV Control Based Study Model](https://community.acescentral.com/t/gamut-mapping-in-cylindrical-and-conic-spaces/) built on top of the [HSV colourspace](https://en.wikipedia.org/wiki/HSL_and_HSV)
-- [Smith (2020) - RGB Saturation Study Model](https://community.acescentral.com/t/rgb-saturation-gamut-mapping-approach-and-a-comp-vfx-perspective/) built on top of the [RGB colourspace](https://en.wikipedia.org/wiki/Color_spaces_with_RGB_primaries)
+The model is extremely simple and elegant while offering good computational speed.
+
+As of this writing, *colour-science* and *jedypod* implementations do not reach parity and will yield different results because of variation in the parameterisation of the respective implementations.
+
+The following implementations are available in alphabetical order:
+
+#### [colour-science/gamut-mapping-ramblings](https://github.com/colour-science/gamut-mapping-ramblings)
+
+Provides Python implementation via Jupyter Notebooks.
 
 Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/README.rst) file for more information.
 
-### [jedypod/gamut-compress](https://github.com/jedypod/gamut-compress)
+![Gamut Medicina 05](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_05.png)
 
-![Resolve UI](https://raw.githubusercontent.com/jedypod/gamut-compress/master/images/screenshots/GamutCompress_resolve-ui.png)
+#### [jedypod/gamut-compress](https://github.com/jedypod/gamut-compress)
 
-Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke) and [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/) of the following gamut mapping study model(s):
+Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke) and [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/).
 
-- [Smith (2020) - RGB Saturation Study Model](https://community.acescentral.com/t/rgb-saturation-gamut-mapping-approach-and-a-comp-vfx-perspective/) built on top of the [RGB colourspace](https://en.wikipedia.org/wiki/Color_spaces_with_RGB_primaries)
+Please refer to the repository [README.md](https://github.com/jedypod/gamut-compress/README.md) file for more information.
 
 ![Collage Gamut Compressed](https://raw.githubusercontent.com/jedypod/gamut-compress/master/images/collage_compressed.rrt.jpg)
 
-Please refer to the repository [README.md](https://github.com/jedypod/gamut-compress/README.md) file for more information.
+![Resolve UI](https://raw.githubusercontent.com/jedypod/gamut-compress/master/images/screenshots/GamutCompress_resolve-ui.png)
+
+### Mansencal and Scharfenberg (2020) HSV Control Based Study Model
+
+The [Mansencal and Scharfenberg (2020) HSV Control Based Study Model](https://community.acescentral.com/t/gamut-mapping-in-cylindrical-and-conic-spaces/) is a background research model.
+
+It is built on top of the [HSV colourspace](https://en.wikipedia.org/wiki/HSL_and_HSV) with the following approach:
+
+- Scene-referred RGB exposure values are converted to HSV.
+- The saturation component 𝑆 is compressed with a cherry-picked compression function.
+- The hue component 𝐻 is warped according to user defined control values.
+- The HSV values are converted back to scene-referred RGB exposure values and then blended with the original scene-referred RGB exposure values function through a smoothstep function.
+
+The model is much more complex and slower but offers direct controls over hue.
+
+The following implementations are available in alphabetical order:
+
+#### [colour-science/gamut-mapping-ramblings](https://github.com/colour-science/gamut-mapping-ramblings)
+
+Provides Python implementation via Jupyter Notebooks.
+
+Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/README.rst) file for more information.
+
+![Gamut Medicina 01](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_01.png)
 
 ## License
 

@@ -35,8 +35,6 @@ to research, experimentation and analysis conducted by the Virtual Working Group
 
 The model is extremely simple and elegant while offering good computational speed.
 
-As of this writing, *colour-science* and *jedypod* implementations do not reach parity and will yield different results because of variation in the parameterisation of the respective implementations.
-
 The following implementations are available:
 
 ##### [jedypod/gamut-compress](https://github.com/jedypod/gamut-compress)

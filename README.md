@@ -100,9 +100,7 @@ exploring the concept of camera-referred "hue lines" by
 
 ![Sketches of Hue](https://i.imgur.com/dhYJBRU.png)
 
-The notebook is directly viewable at this [url](https://seancooper.xyz/aces_vwg_gamutmapping_1/).
-
-An online [Google Colab](https://colab.research.google.com/drive/1LTZEVQWsSJTcKll4VqYnY93RoNpyEh1u)
+The notebook is directly viewable at this [url](https://seancooper.xyz/aces_vwg_gamutmapping_1/) and an online [Google Colab](https://colab.research.google.com/drive/1LTZEVQWsSJTcKll4VqYnY93RoNpyEh1u)
 implementation is also available.
 
 ## License

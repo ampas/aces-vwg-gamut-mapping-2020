@@ -90,7 +90,12 @@ Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/produ
 
 Please refer to the repository [README.md](https://github.com/johnson322/ArriGamutMapping/blob/master/README.md) file for more information.
 
-### Notebooks
+### Notebooks & Scripts
+
+#### Simplistic Gamut Mapping Approaches in Nuke
+
+A [The Foundry Nuke script](research/resources/scripts/Matthias Scharfenberg - gamut_mapping_demo_v02.nk) illustrating some examples of simplistic approaches to the gamut mapping problem by
+[Matthias Scharfenberg](https://community.acescentral.com/t/simplistic-gamut-mapping-approaches-in-nuke/).
 
 #### Sketches of Hue
 

@@ -90,7 +90,7 @@ Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/produ
 
 Please refer to the repository [README.md](https://github.com/johnson322/ArriGamutMapping/blob/master/README.md) file for more information.
 
-### Exploration
+### Notebooks
 
 #### Sketches of Hue
 
@@ -102,6 +102,14 @@ exploring the concept of camera-referred "hue lines" by
 
 The notebook is directly viewable at this [url](https://seancooper.xyz/aces_vwg_gamutmapping_1/) and an online [Google Colab](https://colab.research.google.com/drive/1LTZEVQWsSJTcKll4VqYnY93RoNpyEh1u)
 implementation is also available.
+
+#### Virtual Camera Primaries Rendering of Spectral Locus
+
+An online [Google Colab](https://colab.research.google.com/drive/1rSXtsBkucIn5Z8Jtm-tZ3lv7P8qPmsVk)
+showcasing the distortions of camera spectral sensitivities upon projection in
+the CIE 1931 Chromaticity Diagram by [Troy Sobotka](https://community.acescentral.com/t/virtual-camera-primaries-rendering-of-spectral-locus/).
+
+![Virtual Camera Primaries Rendering of Spectral Locus](https://community.acescentral.com/uploads/default/original/2X/2/23346b664185a57e500ec39649e24d51f1954a88.gif)
 
 ## License
 

@@ -90,6 +90,21 @@ Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/produ
 
 Please refer to the repository [README.md](https://github.com/johnson322/ArriGamutMapping/blob/master/README.md) file for more information.
 
+### Exploration
+
+#### Sketches of Hue
+
+A [Jupyter Notebook](research/repositories/scoopxyz/aces_vwg_gamutmapping_1)
+exploring the concept of camera-referred "hue lines" by
+[Sean Cooper](https://community.acescentral.com/t/notebook-sketches-of-hue).
+
+![Sketches of Hue](https://i.imgur.com/dhYJBRU.png)
+
+The notebook is directly viewable at this [url](https://seancooper.xyz/aces_vwg_gamutmapping_1/).
+
+An online [Google Colab](https://colab.research.google.com/drive/1LTZEVQWsSJTcKll4VqYnY93RoNpyEh1u)
+implementation is also available.
+
 ## License
 
 For Third Party license details see [THIRD_PARTY](THIRD_PARTY).

@@ -7,3 +7,6 @@
 [submodule "research/repositories/johnson322/ArriGamutMapping"]
 	path = research/repositories/johnson322/ArriGamutMapping
 	url = https://github.com/johnson322/ArriGamutMapping.git
+[submodule "research/repositories/scoopxyz/aces_vwg_gamutmapping_1"]
+	path = research/repositories/scoopxyz/aces_vwg_gamutmapping_1
+	url = https://github.com/scoopxyz/aces_vwg_gamutmapping_1.git

@@ -4,3 +4,6 @@
 [submodule "repositories/jedypod/gamut-compress"]
 	path = research/repositories/jedypod/gamut-compress
 	url = https://github.com/jedypod/gamut-compress
+[submodule "research/repositories/johnson322/ArriGamutMapping"]
+	path = research/repositories/johnson322/ArriGamutMapping
+	url = https://github.com/johnson322/ArriGamutMapping.git

@@ -78,6 +78,19 @@ Please refer to the repository [README.rst](https://github.com/colour-science/ga
 
 ![Gamut Medicina 01](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_01.png)
 
+#### Johnson (2020) ARRI Gamut Mapping Study Model
+
+[Johnson (2020) ARRI Gamut Mapping Study Model](https://community.acescentral.com/t/gamut-mapping-method-nuke-script-example/) is focusing on ARRI colourspaces
+while adopting some principles from Smith (2020) model.
+
+The following implementations are available:
+
+##### [https://github.com/johnson322/ArriGamutMapping)
+
+Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke).
+
+Please refer to the repository [README.md](https://github.com/johnson322/ArriGamutMapping/blob/master/README.md) file for more information.
+
 ## License
 
 For Third Party license details see [THIRD_PARTY](THIRD_PARTY).

@@ -6,7 +6,7 @@ The Virtual Working Group proposal can be read in this [document](https://commun
 
 A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central location for sharing resources.
 
-## Gamut Mapping Model
+## Model
 
 The gamut mapping model selected by the Virtual Working Group is based on
 [Smith (2020) - RGB Saturation Study Model](#smith-2020-rgb-saturation-study-model)
@@ -18,7 +18,7 @@ directory:
 - BlinkScript Kernel for [The Foundry Nuke](https://www.foundry.com/products/nuke)
 - CTL for [The Color Transformation Language](https://github.com/ampas/CTL)
 
-## Research, Experimentation & Analysis Resources
+## Research
 
 The [research](research) directory contains a mix of useful resources pertaining
 to research, experimentation and analysis conducted by the Virtual Working Group.

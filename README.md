@@ -9,7 +9,7 @@ A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central 
 ## Model
 
 The gamut mapping model selected by the Virtual Working Group is based on
-[Smith (2020) - RGB Saturation Study Model](#smith-2020-rgb-saturation-study-model)
+[Smith (2020) - RGB Saturation Study Model](#smith-2020---rgb-saturation-study-model).
 
 The following implementations are expected to be available in the [model](model)
 directory:
@@ -25,7 +25,6 @@ to research, experimentation and analysis conducted by the Virtual Working Group
 
 ### Gamut Mapping Study Models
 
-(#smith-2020-rgb-saturation-study-model)
 #### Smith (2020) - RGB Saturation Study Model
 
 [Smith (2020) - RGB Saturation Study Model](https://community.acescentral.com/t/rgb-saturation-gamut-mapping-approach-and-a-comp-vfx-perspective/) is built on top of the [RGB colourspace](https://en.wikipedia.org/wiki/Color_spaces_with_RGB_primaries) with the following approach:

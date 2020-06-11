@@ -36,7 +36,7 @@ The model is extremely simple and elegant while offering good computational spee
 
 The following implementations are available:
 
-##### [jedypod/gamut-compress](https://github.com/jedypod/gamut-compress)
+##### [jedypod/gamut-compress](research/repositories/jedypod/gamut-compress)
 
 Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke) and [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/).
 
@@ -46,7 +46,7 @@ Please refer to the repository [README.md](https://github.com/jedypod/gamut-comp
 
 ![Resolve UI](https://raw.githubusercontent.com/jedypod/gamut-compress/master/images/screenshots/GamutCompress_resolve-ui.png)
 
-##### [colour-science/gamut-mapping-ramblings](https://github.com/colour-science/gamut-mapping-ramblings)
+##### [colour-science/gamut-mapping-ramblings](research/repositories/colour-science/gamut-mapping-ramblings)
 
 Provides Python implementation via Jupyter Notebooks.
 
@@ -69,7 +69,7 @@ The model is much more complex and slower but offers direct controls over hue.
 
 The following implementations are available:
 
-##### [colour-science/gamut-mapping-ramblings](https://github.com/colour-science/gamut-mapping-ramblings)
+##### [colour-science/gamut-mapping-ramblings](research/repositories/colour-science/gamut-mapping-ramblings)
 
 Provides Python implementation via Jupyter Notebooks.
 
@@ -84,7 +84,7 @@ while adopting some principles from Smith (2020) model.
 
 The following implementations are available:
 
-##### [johnson322/ArriGamutMapping](https://github.com/johnson322/ArriGamutMapping)
+##### [johnson322/ArriGamutMapping](research/repositories/johnson322/ArriGamutMapping)
 
 Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke).
 

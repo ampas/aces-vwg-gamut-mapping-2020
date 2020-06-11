@@ -94,7 +94,7 @@ Please refer to the repository [README.md](https://github.com/johnson322/ArriGam
 
 #### Simplistic Gamut Mapping Approaches in Nuke
 
-A [The Foundry Nuke script](research/resources/scripts/Matthias Scharfenberg - gamut_mapping_demo_v02.nk) illustrating some examples of simplistic approaches to the gamut mapping problem by
+A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias Scharfenberg - gamut_mapping_demo_v02.nk) illustrating some examples of simplistic approaches to the gamut mapping problem by
 [Matthias Scharfenberg](https://community.acescentral.com/t/simplistic-gamut-mapping-approaches-in-nuke/).
 
 #### Sketches of Hue

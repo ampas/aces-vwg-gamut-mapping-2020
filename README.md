@@ -119,6 +119,26 @@ the CIE 1931 Chromaticity Diagram by [Troy Sobotka](https://community.acescentra
 
 The notebook is also [archived and under version control](research/resources/notebooks/sobotka/Spectral_Camera_Solve_with_Discrete_Spectra.ipynb) in this repository.
 
+#### colour-science Notebooks
+
+An assortment of Google Colab notebooks produced for the Virtual Working Group.
+
+- [Camera to Observer Mapping](https://colab.research.google.com/drive/1YO6kfohVxjdGm4t6I3JMifff00BB2SuM?usp=sharing)
+- [Confidence Gamut](https://colab.research.google.com/drive/1fblzppgFwDwZyvooN5HD0T-Mb3rOhbez?usp=sharing)
+- [Maximum Representable Value](https://colab.research.google.com/drive/1f-5A-u7hqklDHYoWNLsQVSsy8MCUk6Js?usp=sharing)
+- [Mitsuba Spectral Image Rendering](https://colab.research.google.com/drive/1Z0BE49o9cbr7235kDs4VKijNwJl8jZsj?usp=sharing)
+- [Mitsuba Image Processing](https://colab.research.google.com/drive/1oW6f0XwCZFiJYij4d6jHQCNFU1CVLnQ7?usp=sharing)
+- [Spectral Images Generation](https://colab.research.google.com/drive/1Zm1QSVJG09uWkkarZLCtLi_xPzCC4Gof?usp=sharing)
+- [Spectral Images Processing](https://colab.research.google.com/drive/1Gm3AsGtFi84XyqGGDZRrJKFH_NRaVj-c?usp=sharing)
+
+The notebooks are also [archived and under version control](research/resources/notebooks/colour-science) in this repository.
+
+Some notebooks have companion hosted pages:
+
+- https://academy-vwg-gm-hyper-spectral-images.imfast.io/
+- https://academy-vwg-gm-mitsuba-spectral-images.imfast.io/
+- https://academy-vwg-gm-spectral-spheres.imfast.io/
+
 ## License
 
 For Third Party license details see [THIRD_PARTY](THIRD_PARTY).

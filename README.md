@@ -84,7 +84,7 @@ while adopting some principles from Smith (2020) model.
 
 The following implementations are available:
 
-##### [https://github.com/johnson322/ArriGamutMapping)
+##### [johnson322/ArriGamutMapping](https://github.com/johnson322/ArriGamutMapping)
 
 Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke).
 

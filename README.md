@@ -124,6 +124,7 @@ The notebook is also [archived and under version control](research/resources/not
 An assortment of Google Colab notebooks produced for the Virtual Working Group.
 
 - [Camera to Observer Mapping](https://colab.research.google.com/drive/1YO6kfohVxjdGm4t6I3JMifff00BB2SuM?usp=sharing)
+- [Compressiong Limits](https://colab.research.google.com/drive/13gldB6XxcDrYhqwFnjAc5BlRRIsrhxyn?usp=sharing)
 - [Confidence Gamut](https://colab.research.google.com/drive/1fblzppgFwDwZyvooN5HD0T-Mb3rOhbez?usp=sharing)
 - [Maximum Representable Value](https://colab.research.google.com/drive/1f-5A-u7hqklDHYoWNLsQVSsy8MCUk6Js?usp=sharing)
 - [Mitsuba Spectral Image Rendering](https://colab.research.google.com/drive/1Z0BE49o9cbr7235kDs4VKijNwJl8jZsj?usp=sharing)

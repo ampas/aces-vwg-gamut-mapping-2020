@@ -6,6 +6,14 @@ The Virtual Working Group proposal can be read in this [document](https://commun
 
 A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central location for sharing resources.
 
+## Installation
+
+```shell
+    $ git clone https://github.com/colour-science/aces-vwg-gamut-mapping-2020.git
+    $ cd aces-vwg-gamut-mapping-2020
+    $ git submodule update --init --recursive
+```
+
 ## Model
 
 The gamut mapping model selected by the Virtual Working Group is based on

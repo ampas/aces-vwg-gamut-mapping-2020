@@ -28,8 +28,20 @@ directory:
 
 ## Research
 
-The [research](research) directory contains a mix of useful resources pertaining
-to research, experimentation and analysis conducted by the Virtual Working Group.
+The [research](research) directory contains a mix of useful resources pertaining to research, experimentation and analysis conducted by the Virtual Working Group.
+
+### Extended ACES Configuration
+
+To review the gamut mapping model objectively, the Virtual Working Group has extended the *OpenColorIO ACES Configuration* and added the following views:
+
+- ARRI ALF-2 (Rec.709)
+- ARRI K1S1 (Rec.709)
+- RED IPP2 (Rec.709)
+- Filmlight TCAM (Rec.709)
+
+Because of its size, the *complete* configuration is only available from an [external repository branch](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces_vwg_gm), however, the required LUTs and diff for the `config.ocio` file are [archived and under version control](research/resources/ocio/configurations/aces_1.2) in this repository.
+
+Discussions pertaining to the configuration can be read in the [dedicated thread](https://community.acescentral.com/t/display-transform-blgs-for-nuke-for-gamut-compressor-assessment/).
 
 ### Gamut Mapping Study Models
 

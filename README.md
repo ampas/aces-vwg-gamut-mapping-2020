@@ -58,9 +58,15 @@ The following implementations are available:
 
 ##### [jedypod/gamut-compress](research/repositories/jedypod)
 
-Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke) and [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/).
+Provides DCC implementation for :
 
-Please refer to the repository [README.md](https://github.com/jedypod/gamut-compress/README.md) file for more information.
+- [Filmlight Baselight](https://www.filmlight.ltd.uk/products/baselight/overview_bl.php)
+- [Autodesk Flame](https://www.autodesk.com/products/flame)
+- [The Foundry Nuke](https://www.foundry.com/products/nuke)
+- [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve)
+- [Assimilate Scratch](https://www.assimilateinc.com)
+
+Please refer to the repository [README.md](https://github.com/jedypod/gamut-compress/blob/master/README.md) file for more information.
 
 ![Collage Gamut Compressed](https://raw.githubusercontent.com/jedypod/gamut-compress/master/images/collage_compressed.rrt.jpg)
 
@@ -70,7 +76,7 @@ Please refer to the repository [README.md](https://github.com/jedypod/gamut-comp
 
 Provides Python implementation via Jupyter Notebooks.
 
-Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/README.rst) file for more information.
+Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/blob/master/README.rst) file for more information.
 
 ![Gamut Medicina 05](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_05.png)
 
@@ -93,7 +99,7 @@ The following implementations are available:
 
 Provides Python implementation via Jupyter Notebooks.
 
-Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/README.rst) file for more information.
+Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/blob/master/README.rst) file for more information.
 
 ![Gamut Medicina 01](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_01.png)
 

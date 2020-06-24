@@ -39,7 +39,7 @@ To review the gamut mapping model objectively, the Virtual Working Group has ext
 - RED IPP2 (Rec.709)
 - Filmlight TCAM (Rec.709)
 
-Because of its size, the *complete* configuration is only available from an [external repository branch](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces_vwg_gm), however, the required LUTs and diff for the `config.ocio` file are [archived and under version control](research/resources/ocio/configurations/aces_1.2) in this repository.
+Because of its size, the *complete* configuration is only available from an [external repository branch](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces_vwg_gm), however, the required LUTs and diff for the `config.ocio` file are [archived and under version control](research/resources/ocio/configurations/aces_1.2) in this repository along with the original [Filmlight Baselight grade display rendering transforms](research/resources/baselight/blg_drt/shaw).
 
 Discussions pertaining to the configuration can be read in the [dedicated thread](https://community.acescentral.com/t/display-transform-blgs-for-nuke-for-gamut-compressor-assessment/).
 

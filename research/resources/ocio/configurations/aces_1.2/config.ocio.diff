@@ -1,5 +1,5 @@
 diff --git a/aces_1.2/config.ocio b/aces_1.2/config.ocio
-index 1e865d6..59a1d0d 100644
+index 1e865d6..8bb5437 100644
 --- a/aces_1.2/config.ocio
 +++ b/aces_1.2/config.ocio
 @@ -1,6 +1,6 @@
@@ -35,10 +35,25 @@ index 1e865d6..59a1d0d 100644
  
  colorspaces:
    - !<ColorSpace>
-@@ -4964,3 +4971,78 @@ colorspaces:
+@@ -4964,3 +4971,93 @@ colorspaces:
      allocation: lg2
      allocationvars: [-8, 5, 0.00390625]
      to_reference: !<ColorSpaceTransform> {src: ACES - ACEScg, dst: ACES - ACES2065-1}
++
++  - !<ColorSpace>
++    name: Input - Filmlight T-Log - E-Gamut
++    family: Input/Filmlight
++    equalitygroup: ""
++    bitdepth: 32f
++    description: |
++      T-Log - E-Gamut
++    isdata: false
++    allocation: uniform
++    allocationvars: [0, 1]
++    to_reference: !<GroupTransform>
++      children:
++        - !<FileTransform> {src: T_Log_to_linear.spi1d, interpolation: linear}
++        - !<MatrixTransform> {matrix: [0.742249, 0.172616, 0.085135, 0, 0.024648, 1.038230, -0.062878, 0, -0.095295, -0.066945, 1.162240, 0, 0, 0, 0, 1]}
 +
 +  - !<ColorSpace>
 +    name: Output - ACES - Rec.709 - ACES GM VWG
@@ -67,8 +82,8 @@ index 1e865d6..59a1d0d 100644
 +    allocationvars: [0, 1]
 +    from_reference: !<GroupTransform>
 +      children:
-+        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: ACES - ACEScg}
-+        - !<FileTransform> {src: ACEScg_to_ALF-2_Rec709.csp, interpolation: tetrahedral}
++        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: Input - ARRI - V3 LogC (EI800) - Wide Gamut}
++        - !<FileTransform> {src: LogCv3_AWG3_to_ALF2_709.spi3d, interpolation: tetrahedral}
 +
 +  - !<ColorSpace>
 +    name: Output - ARRI K1S1 - Rec.709 - ACES GM VWG
@@ -82,8 +97,8 @@ index 1e865d6..59a1d0d 100644
 +    allocationvars: [0, 1]
 +    from_reference: !<GroupTransform>
 +      children:
-+        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: ACES - ACEScg}
-+        - !<FileTransform> {src: ACEScg_to_ARRI_K1S1.csp, interpolation: tetrahedral}
++        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: Input - ARRI - V3 LogC (EI800) - Wide Gamut}
++        - !<FileTransform> {src: LogCv3_AWG3_to_K1S1_709.spi3d, interpolation: tetrahedral}
 +
 +  - !<ColorSpace>
 +    name: Output - RED IPP2 - Rec.709 - ACES GM VWG
@@ -97,8 +112,8 @@ index 1e865d6..59a1d0d 100644
 +    allocationvars: [0, 1]
 +    from_reference: !<GroupTransform>
 +      children:
-+        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: ACES - ACEScg}
-+        - !<FileTransform> {src: ACEScg_to_IPP2_Rec709.csp, interpolation: tetrahedral}
++        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: Input - RED - REDLog3G10 - REDWideGamutRGB}
++        - !<FileTransform> {src: Log3G10_RWG_to_IPP2_709.spi3d, interpolation: tetrahedral}
 +
 +  - !<ColorSpace>
 +    name: Output - Filmlight TCAM - Rec.709 - ACES GM VWG
@@ -112,5 +127,5 @@ index 1e865d6..59a1d0d 100644
 +    allocationvars: [0, 1]
 +    from_reference: !<GroupTransform>
 +      children:
-+        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: ACES - ACEScg}
-+        - !<FileTransform> {src: ACEScg_to_TCAM_Rec709.csp, interpolation: tetrahedral}
++        - !<ColorSpaceTransform> {src: ACES - ACES2065-1, dst: Input - Filmlight T-Log - E-Gamut}
++        - !<FileTransform> {src: T_Log_E_Gamut_to_T_CAM_709.spi3d, interpolation: tetrahedral}

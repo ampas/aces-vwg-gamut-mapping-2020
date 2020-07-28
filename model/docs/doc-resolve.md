@@ -1,11 +1,11 @@
-![Resolve UI](/images/screenshots/GamutCompress_resolve-ui.png)
+![Resolve UI](/model/docs/images/screenshots/GamutCompress_resolve-ui.png)
 
 A DCTL for Blackmagic Resolve is also provided. This is based on the [initial version written by Nick Shaw](https://github.com/nick-shaw/gamut_mapping). Huge thanks to him for putting that together! He also has a Matchbox shader in his repo which might be of use in Baselight or Flame.
 
 
 
 ### Usage
-![GamutCompress Nuke UI](/images/screenshots/GamutCompress_nuke-ui.png)
+![GamutCompress Nuke UI](/model/docs/images/screenshots/GamutCompress_nuke-ui.png)
 
 Threshold is the percentage of the outer gamut to affect. A value of 0.2 will compress out of gamut values into the outer 20% of the gamut.
 
@@ -15,6 +15,6 @@ Method specifies the type of compression curve to use. Currently the master bran
 
 Inverting the gamut compression exactly is also possible. This workflow might be necessary in visual effects pipelines where the source plates need to be delivered back to the client exactly as they came in. There should be an excess of caution used with this workflow however. If highly saturated colors in the outer 20% of the color gamut are uncompressed, the results might be very extreme and unpredictable. Efforts should be undertaken to watch this eventuality very closely if this workflow is used.
 
-![Resolve UI](/images/screenshots/GamutCompress_resolve-ui.png)
+![Resolve UI](/model/docs/images/screenshots/GamutCompress_resolve-ui.png)
 
 A DCTL for Blackmagic Resolve is also provided. This is based on the [initial version written by Nick Shaw](https://github.com/nick-shaw/gamut_mapping). Huge thanks to him for putting that together! He also has a Matchbox shader in his repo which might be of use in Baselight or Flame.

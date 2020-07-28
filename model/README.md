@@ -14,7 +14,7 @@ This tool was developed as part of the [ACES Gamut Mapping Virtual Working Group
 
 Here is a contactsheet of [sample images](https://www.dropbox.com/sh/u6z2a0jboo4vno8/AAB-10qcflhpr0C5LWhs7Kq4a?dl=0) showing the visual appearance of out of gamut colors.
 
-[<img src=/docs/images/collage.rrt.jpg width=48% height=48%/>](/model/docs/images/collage.rrt.jpg?raw=true) [<img src=/model/docs/images/collage_compressed.rrt.jpg width=48% height=48%/>](/model/docs/images/collage_compressed.rrt.jpg?raw=true)
+[<img src=/model/docs/images/collage.rrt.jpg width=48% height=48%/>](/model/docs/images/collage.rrt.jpg?raw=true) [<img src=/model/docs/images/collage_compressed.rrt.jpg width=48% height=48%/>](/model/docs/images/collage_compressed.rrt.jpg?raw=true)
 
 On the left are the original images with the ACES Rec.709 RRT display rendering transform applied. On the right are the same images, but with gamut compression applied.
 

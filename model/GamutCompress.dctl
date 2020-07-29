@@ -1,6 +1,6 @@
-DEFINE_UI_PARAMS(threshold_r, threshold r, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
-DEFINE_UI_PARAMS(threshold_g, threshold g, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
-DEFINE_UI_PARAMS(threshold_b, threshold b, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(threshold_r, threshold c, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(threshold_g, threshold m, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(threshold_b, threshold y, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
 DEFINE_UI_PARAMS(power, power, DCTLUI_SLIDER_FLOAT, 1.2f, 1.0f, 3.0f, 1.0f);
 DEFINE_UI_PARAMS(shd_rolloff, shd rolloff, DCTLUI_SLIDER_FLOAT, 0.0f, 0.0f, 0.1f, 0.0f);
 DEFINE_UI_PARAMS(cyan, cyan, DCTLUI_SLIDER_FLOAT, 0.09f, 0.0f, 1.0f, 0.0f);
@@ -10,6 +10,7 @@ DEFINE_UI_PARAMS(cmethod, method, DCTLUI_COMBO_BOX, 2, {L, R, P, E, A, T}, {log,
 DEFINE_UI_PARAMS(working_colorspace, working space, DCTLUI_COMBO_BOX, 0, {acescct, acescc, acescg}, {acescct, acescc, acescg});
 DEFINE_UI_PARAMS(hexagonal, hexagonal, DCTLUI_CHECK_BOX, 0);
 DEFINE_UI_PARAMS(invert, invert, DCTLUI_CHECK_BOX, 0);
+DEFINE_UI_PARAMS(overlay, overlay graph, DCTLUI_CHECK_BOX, 0)
 
 __CONSTANT__ float pi = 3.14159265359f;
 
@@ -192,6 +193,9 @@ __DEVICE__ float3 transform(int p_Width, int p_Height, int p_X, int p_Y, float p
 { 
   // ^-- this is necessary for the DCTL to work!
 
+  // normalised pixel coordinates
+  float2 pos = make_float2((float)p_X / p_Width, (float)(p_Height - p_Y) / p_Height);
+
   // source pixels
   float3 rgb = make_float3(p_R, p_G, p_B);
   
@@ -286,6 +290,21 @@ __DEVICE__ float3 transform(int p_Width, int p_Height, int p_X, int p_Y, float p
     ach-cdist.x*ach_shd,
     ach-cdist.y*ach_shd,
     ach-cdist.z*ach_shd);
+
+  // Graph overlay method based on one by Paul Dore
+  // https://github.com/baldavenger/DCTLs/tree/master/ACES%20TOOLS
+  if (overlay) {
+    float3 cramp = make_float3(
+      compress(2.0f * pos.x, lim.x, thr.x, invert, method, power),
+      compress(2.0f * pos.x, lim.y, thr.y, invert, method, power),
+      compress(2.0f * pos.x, lim.z, thr.z, invert, method, power));
+    bool overlay_r = _fabs(2.0f * pos.y - cramp.x) < 0.004f || _fabs(pos.y - 0.5f) < 0.0005f ? true : false;
+    bool overlay_g = _fabs(2.0f * pos.y - cramp.y) < 0.004f || _fabs(pos.y - 0.5f) < 0.0005f ? true : false;
+    bool overlay_b = _fabs(2.0f * pos.y - cramp.z) < 0.004f || _fabs(pos.y - 0.5f) < 0.0005f ? true : false;
+    crgb.x = overlay_g || overlay_b ? 1.0f : crgb.x;
+    crgb.y = overlay_b || overlay_r ? 1.0f : crgb.y;
+    crgb.z = overlay_r || overlay_g ? 1.0f : crgb.z;
+  }
 
   if (working_colorspace == acescct) {
     crgb.x = lin_to_acescct(crgb.x);

@@ -1,7 +1,7 @@
 uniform sampler2D frontTex, matteTex, selectiveTex;
 uniform float power, cyan, magenta, yellow, shd_rolloff, adsk_result_w, adsk_result_h;
 uniform int method, working_colorspace;
-uniform bool invert, hexagonal;
+uniform bool invert, hexagonal, overlay;
 uniform vec3 threshold;
 
 const float pi = 3.14159265359;
@@ -273,6 +273,21 @@ void main() {
     ach-cdist.x*ach_shd,
     ach-cdist.y*ach_shd,
     ach-cdist.z*ach_shd);
+
+  // Graph overlay method based on one by Paul Dore
+  // https://github.com/baldavenger/DCTLs/tree/master/ACES%20TOOLS
+  if (overlay) {
+    vec3 cramp = vec3(
+      compress(2.0 * coords.x, lim.x, thr.x, invert, method, power),
+      compress(2.0 * coords.x, lim.y, thr.y, invert, method, power),
+      compress(2.0 * coords.x, lim.z, thr.z, invert, method, power));
+    bool overlay_r = abs(2.0 * coords.y - cramp.x) < 0.004 || abs(coords.y - 0.5) < 0.0005 ? true : false;
+    bool overlay_g = abs(2.0 * coords.y - cramp.y) < 0.004 || abs(coords.y - 0.5) < 0.0005 ? true : false;
+    bool overlay_b = abs(2.0 * coords.y - cramp.z) < 0.004 || abs(coords.y - 0.5) < 0.0005 ? true : false;
+    crgb.x = overlay_g || overlay_b ? 1.0 : crgb.x;
+    crgb.y = overlay_b || overlay_r ? 1.0 : crgb.y;
+    crgb.z = overlay_r || overlay_g ? 1.0 : crgb.z;
+  }
 
   if (working_colorspace == 1) {
     crgb.x = lin_to_acescct(crgb.x);

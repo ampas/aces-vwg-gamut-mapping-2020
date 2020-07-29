@@ -121,6 +121,8 @@ Be wary of high values if accurate inversion is important to you."
       </Uniform>
       <Uniform Row="2" Col="2" Page="0" Default="False" Tooltip="Reverse the direction of the operation from gamut compression to gamut expansion." Type="bool" ChannelName="invert" DisplayName="invert" Name="invert">
       </Uniform>
+      <Uniform Row="3" Col="2" Page="0" Default="False" Tooltip="Show overlay of compression curves." Type="bool" ChannelName="overlay" DisplayName="overlay graph" Name="overlay">
+      </Uniform>
    </Shader>
    <Page Name="Gamut Compress" Page="0">
       <Col Name="Controls" Col="0" Page="0">

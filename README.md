@@ -124,6 +124,10 @@ Please refer to the repository [README.md](https://github.com/johnson322/ArriGam
 A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias%20Scharfenberg%20-%20gamut_mapping_demo_v02.nk) illustrating some examples of simplistic approaches to the gamut mapping problem by
 [Matthias Scharfenberg](https://community.acescentral.com/t/simplistic-gamut-mapping-approaches-in-nuke/).
 
+#### Gamut Mapper Equal Hue Line Comparison in Nuke
+
+A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias%20Scharfenberg%20-%20gamut_mapper_equal_hue_line_comparison_v01.nk) comparing gamut mapped hue lines by Matthias Scharfenberg.
+
 #### Sketches of Hue
 
 A [Jupyter Notebook](research/repositories/scoopxyz)

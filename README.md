@@ -19,12 +19,13 @@ A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central 
 The gamut mapping model selected by the Virtual Working Group is based on
 [Smith (2020) - RGB Saturation Study Model](#smith-2020---rgb-saturation-study-model).
 
-The following implementations are expected to be available in the [model](model)
-directory:
+The following implementations are available in the [model](model) directory:
 
-- DCTL for [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/)
 - BlinkScript Kernel for [The Foundry Nuke](https://www.foundry.com/products/nuke)
-- CTL for [The Color Transformation Language](https://github.com/ampas/CTL)
+- DCTL for [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/)
+- Fuse for [Fusion Studio](https://www.blackmagicdesign.com/products/fusion/)
+- Matchbox GLSL for [Autodesk Flame & Smoke](https://www.autodesk.com/products/flame/)
+- Nuke Script for [The Foundry Nuke](https://www.foundry.com/products/nuke)
 
 ## Research
 

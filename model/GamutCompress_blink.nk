@@ -1,54 +1,8 @@
-#! /Applications/Nuke12.1v2/Nuke12.1v2.app/Contents/MacOS/libnuke-12.1.2.dylib -nx
-version 12.1 v2
-define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
-<layout version="1.0">
-    <window x="0" y="23" w="1920" h="1155" maximized="1" screen="0">
-        <splitter orientation="1">
-            <split size="40"/>
-            <dock id="" hideTitles="1" activePageId="Toolbar.1">
-                <page id="Toolbar.1"/>
-            </dock>
-            <split size="1257" stretch="1"/>
-            <splitter orientation="2">
-                <split size="666"/>
-                <dock id="" activePageId="Viewer.1">
-                    <page id="Viewer.1"/>
-                </dock>
-                <split size="469"/>
-                <dock id="" activePageId="DAG.1" focus="true">
-                    <page id="DAG.1"/>
-                    <page id="Curve Editor.1"/>
-                    <page id="DopeSheet.1"/>
-                </dock>
-            </splitter>
-            <split size="615"/>
-            <dock id="" activePageId="Properties.1">
-                <page id="Properties.1"/>
-                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
-            </dock>
-        </splitter>
-    </window>
-</layout>
-}
-Root {
- inputs 0
- name /Users/nick/Dropbox/MacPro_Jobs/AMPAS/gamut_mapping/aces-vwg-gamut-mapping-2020/model/GamutCompress_blink.nk
- colorManagement Nuke
- OCIO_config aces_1.1
- workingSpaceLUT linear
- monitorLut sRGB
- int8Lut sRGB
- int16Lut sRGB
- logLut Cineon
- floatLut linear
-}
+set cut_paste_input [stack 0]
+push $cut_paste_input
 Group {
- inputs 0
  name GamutCompress_blink
  label "\[value method] : \[value direction]"
- selected true
- xpos 400
- ypos -9
  addUserKnob {20 GamutCompress}
  addUserKnob {4 method t "Choose the type of distance compression function you want to use" M {log reinhard power exp atan tanh ""}}
  method power

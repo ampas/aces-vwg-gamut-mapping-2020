@@ -107,7 +107,7 @@ function Create()
     INP_Default = 0.0,
   })
     
-  InThresholdR = self:AddInput("threshold_r", "threshold_r", {
+  InThresholdR = self:AddInput("threshold_c", "threshold_c", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
     INP_Default = 0.8,
@@ -115,7 +115,7 @@ function Create()
     INP_MaxScale = 0.9999,
   })
 
-  InThresholdG = self:AddInput("threshold_g", "threshold_g", {
+  InThresholdG = self:AddInput("threshold_m", "threshold_m", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
     INP_Default = 0.8,
@@ -123,7 +123,7 @@ function Create()
     INP_MaxScale = 0.9999,
   })
 
-  InThresholdB = self:AddInput("threshold_b", "threshold_b", {
+  InThresholdB = self:AddInput("threshold_y", "threshold_y", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
     INP_Default = 0.8,
@@ -183,6 +183,14 @@ function Create()
     INP_Default = 0.0,
   })
 
+  InOverlay = self:AddInput("overlay graph", "overlay graph", {
+    LINKID_DataType = "Number",
+    INPID_InputControl = "CheckboxControl",
+    INP_MinAllowed = 0.0,
+    INP_MaxAllowed = 1.0,
+    INP_Default = 0.0,
+  })
+
   InImage = self:AddInput("Input", "Input", {
     LINKID_DataType = "Image",
     LINK_Main = 1,
@@ -215,7 +223,9 @@ function Process(req)
     params.yellow = InYellow:GetValue(req).Value
     params.invert = InInvert:GetValue(req).Value
     params.srcCompOrder = src:IsMask() and 1 or 15
- 
+    params.srcSize[0] = src.Width
+    params.srcSize[1] = src.Height
+    params.overlay = InOverlay:GetValue(req).Value
     node:SetParamBlock(params)
  
     node:AddInput("src", src)
@@ -245,7 +255,9 @@ SolidParams = [[
   float magenta;
   float yellow;
   int invert;
+  int overlay;
   int srcCompOrder;
+  int srcSize[2];
 ]]
 
  
@@ -393,6 +405,9 @@ SolidKernel = [[
     DEFINE_KERNEL_ITERATORS_XY(x, y);
     float4 rgb = _tex2DVecN(src, x, y, params->srcCompOrder);
 
+    // normalised pixel coordinates
+    float2 pos = make_float2((float)x / params->srcSize[0], (float)y / params->srcSize[1]);
+
     // set up method
     int method;
     if (params->method == 0) {
@@ -474,6 +489,21 @@ SolidKernel = [[
       ach-cdist.y*ach_shd,
       ach-cdist.z*ach_shd,
       rgb.w);
+
+    // Graph overlay method based on one by Paul Dore
+    // https://github.com/baldavenger/DCTLs/tree/master/ACES%20TOOLS
+    if (params->overlay == 1) {
+      float3 cramp = make_float3(
+        compress(2.0f * pos.x, lim.x, thr.x, params->invert, method, params->power),
+        compress(2.0f * pos.x, lim.y, thr.y, params->invert, method, params->power),
+        compress(2.0f * pos.x, lim.z, thr.z, params->invert, method, params->power));
+      bool overlay_r = _fabs(2.0f * pos.y - cramp.x) < 0.004f || _fabs(pos.y - 0.5f) < 0.0005f ? true : false;
+      bool overlay_g = _fabs(2.0f * pos.y - cramp.y) < 0.004f || _fabs(pos.y - 0.5f) < 0.0005f ? true : false;
+      bool overlay_b = _fabs(2.0f * pos.y - cramp.z) < 0.004f || _fabs(pos.y - 0.5f) < 0.0005f ? true : false;
+      crgb.x = overlay_g || overlay_b ? 1.0f : crgb.x;
+      crgb.y = overlay_b || overlay_r ? 1.0f : crgb.y;
+      crgb.z = overlay_r || overlay_g ? 1.0f : crgb.z;
+    }
 
       _tex2DVec4Write(dst, x, y, crgb);
   }

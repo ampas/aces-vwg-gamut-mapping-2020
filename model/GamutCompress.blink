@@ -9,9 +9,11 @@ kernel GamutCompression : public ImageComputationKernel<ePixelWise> {
     float cyan;
     float magenta;
     float yellow;
+    float p_Height;
     int method;
     bool hexagonal;
     bool invert;
+    bool overlay;
 
   local:
   float3 thr;
@@ -189,10 +191,13 @@ kernel GamutCompression : public ImageComputationKernel<ePixelWise> {
   }
 
 
-  void process() {
+  void process(int2 pos) {
     // source pixels
     SampleType(src) rgba = src();
     float3 rgb = float3(rgba.x, rgba.y, rgba.z);
+
+    // normalised pixel coordinates
+    float2 fpos = float2((float)pos.x / dst.bounds.width(), (float)pos.y / p_Height);
 
     // achromatic axis 
     float ach = max(rgb.x, max(rgb.y, rgb.z));
@@ -227,6 +232,21 @@ kernel GamutCompression : public ImageComputationKernel<ePixelWise> {
     // recalculate rgb from compressed distance and achromatic
     // effectively this scales each color component relative to achromatic axis by the compressed distance
     float3 crgb = ach-cdist*ach_shd;
+
+    // Graph overlay method based on one by Paul Dore
+    // https://github.com/baldavenger/DCTLs/tree/master/ACES%20TOOLS
+    if (overlay) {
+      float3 cramp = float3(
+        compress(2.0f * fpos.x, lim.x, thr.x),
+        compress(2.0f * fpos.x, lim.y, thr.y),
+        compress(2.0f * fpos.x, lim.z, thr.z));
+      bool overlay_r = fabs(2.0f * fpos.y - cramp.x) < 0.004f || fabs(fpos.y - 0.5f) < 0.0005f ? true : false;
+      bool overlay_g = fabs(2.0f * fpos.y - cramp.y) < 0.004f || fabs(fpos.y - 0.5f) < 0.0005f ? true : false;
+      bool overlay_b = fabs(2.0f * fpos.y - cramp.z) < 0.004f || fabs(fpos.y - 0.5f) < 0.0005f ? true : false;
+      crgb.x = overlay_g || overlay_b ? 1.0f : crgb.x;
+      crgb.y = overlay_b || overlay_r ? 1.0f : crgb.y;
+      crgb.z = overlay_r || overlay_g ? 1.0f : crgb.z;
+    }
 
     // write to output
     dst() = float4(crgb.x, crgb.y, crgb.z, rgba.w);

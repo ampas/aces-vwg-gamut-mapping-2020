@@ -23,7 +23,7 @@ Group {
  yellow 0.12
  addUserKnob {6 hexagonal t "Compress secondary colors in addition to primary colors. Uses variation on the algorithm suggested by Nick Shaw https://community.acescentral.com/t/a-variation-on-jeds-rgb-gamut-mapper/3060" +STARTLINE}
  addUserKnob {6 overlay l "graph overlay" +STARTLINE}
- addUserKnob {22 reset t "Reset knobs to default values. Distance limits are calculated based on an the average of a selection of digital cinema cameras." T "n = nuke.thisNode()\nnuke.root().begin()\ndefaults = \{\n    'threshold': 0.2,\n    'power': 1.2,\n    'shd_rolloff': 0.03,\n    'cyan': 0.09,\n    'magenta':0.24,\n    'yellow': 0.12,\n\}\nfor k, v in defaults.items():\n    n\[k].setValue(v)" +STARTLINE}
+ addUserKnob {22 reset t "Reset knobs to default values. Distance limits are calculated based on an the average of a selection of digital cinema cameras." T "n = nuke.thisNode()\nnuke.root().begin()\ndefaults = \{\n    'threshold': 0.8,\n    'power': 1.2,\n    'shd_rolloff': 0.0,\n    'cyan': 0.09,\n    'magenta':0.24,\n    'yellow': 0.12,\n\}\nfor k, v in defaults.items():\n    n\[k].setValue(v)" +STARTLINE}
  addUserKnob {26 ""}
  addUserKnob {4 direction M {forward inverse}}
  addUserKnob {20 info_tab l Info}

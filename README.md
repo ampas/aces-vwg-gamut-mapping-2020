@@ -19,17 +19,30 @@ A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central 
 The gamut mapping model selected by the Virtual Working Group is based on
 [Smith (2020) - RGB Saturation Study Model](#smith-2020---rgb-saturation-study-model).
 
-The following implementations are expected to be available in the [model](model)
-directory:
+The following implementations are available in the [model](model) directory:
 
-- DCTL for [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/)
 - BlinkScript Kernel for [The Foundry Nuke](https://www.foundry.com/products/nuke)
-- CTL for [The Color Transformation Language](https://github.com/ampas/CTL)
+- DCTL for [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/)
+- Fuse for [Fusion Studio](https://www.blackmagicdesign.com/products/fusion/)
+- Matchbox GLSL for [Autodesk Flame & Smoke](https://www.autodesk.com/products/flame/)
+- Nuke Script for [The Foundry Nuke](https://www.foundry.com/products/nuke)
 
 ## Research
 
-The [research](research) directory contains a mix of useful resources pertaining
-to research, experimentation and analysis conducted by the Virtual Working Group.
+The [research](research) directory contains a mix of useful resources pertaining to research, experimentation and analysis conducted by the Virtual Working Group.
+
+### Extended ACES Configuration
+
+To review the gamut mapping model objectively, the Virtual Working Group has extended the *OpenColorIO ACES Configuration* and added the following views:
+
+- ARRI ALF-2 (Rec.709)
+- ARRI K1S1 (Rec.709)
+- RED IPP2 (Rec.709)
+- Filmlight TCAM (Rec.709)
+
+Because of its size, the *complete* configuration is only available from an [external repository branch](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces_vwg_gm), however, the required LUTs and diff for the `config.ocio` file are [archived and under version control](research/resources/ocio/configurations/aces_1.2) in this repository along with the original [Filmlight Baselight grade display rendering transforms](research/resources/baselight/blg_drt/shaw).
+
+Discussions pertaining to the configuration can be read in the [dedicated thread](https://community.acescentral.com/t/display-transform-blgs-for-nuke-for-gamut-compressor-assessment/).
 
 ### Gamut Mapping Study Models
 
@@ -46,9 +59,15 @@ The following implementations are available:
 
 ##### [jedypod/gamut-compress](research/repositories/jedypod)
 
-Provides DCC implementation for [The Foundry Nuke](https://www.foundry.com/products/nuke) and [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve/).
+Provides DCC implementation for :
 
-Please refer to the repository [README.md](https://github.com/jedypod/gamut-compress/README.md) file for more information.
+- [Filmlight Baselight](https://www.filmlight.ltd.uk/products/baselight/overview_bl.php)
+- [Autodesk Flame](https://www.autodesk.com/products/flame)
+- [The Foundry Nuke](https://www.foundry.com/products/nuke)
+- [Davinci Resolve](https://www.blackmagicdesign.com/products/davinciresolve)
+- [Assimilate Scratch](https://www.assimilateinc.com)
+
+Please refer to the repository [README.md](https://github.com/jedypod/gamut-compress/blob/master/README.md) file for more information.
 
 ![Collage Gamut Compressed](https://raw.githubusercontent.com/jedypod/gamut-compress/master/images/collage_compressed.rrt.jpg)
 
@@ -58,7 +77,7 @@ Please refer to the repository [README.md](https://github.com/jedypod/gamut-comp
 
 Provides Python implementation via Jupyter Notebooks.
 
-Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/README.rst) file for more information.
+Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/blob/master/README.rst) file for more information.
 
 ![Gamut Medicina 05](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_05.png)
 
@@ -81,7 +100,7 @@ The following implementations are available:
 
 Provides Python implementation via Jupyter Notebooks.
 
-Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/README.rst) file for more information.
+Please refer to the repository [README.rst](https://github.com/colour-science/gamut-mapping-ramblings/blob/master/README.rst) file for more information.
 
 ![Gamut Medicina 01](https://raw.githubusercontent.com/colour-science/gamut-mapping-ramblings/master/resources/images/Gamut_Medicina_01.png)
 
@@ -104,6 +123,10 @@ Please refer to the repository [README.md](https://github.com/johnson322/ArriGam
 
 A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias%20Scharfenberg%20-%20gamut_mapping_demo_v02.nk) illustrating some examples of simplistic approaches to the gamut mapping problem by
 [Matthias Scharfenberg](https://community.acescentral.com/t/simplistic-gamut-mapping-approaches-in-nuke/).
+
+#### Gamut Mapper Equal Hue Line Comparison in Nuke
+
+A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias%20Scharfenberg%20-%20gamut_mapper_equal_hue_line_comparison_v01.nk) comparing gamut mapped hue lines by Matthias Scharfenberg.
 
 #### Sketches of Hue
 

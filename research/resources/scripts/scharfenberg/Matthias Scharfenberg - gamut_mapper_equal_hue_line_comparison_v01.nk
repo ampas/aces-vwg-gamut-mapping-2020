@@ -1,0 +1,2636 @@
+#! /Applications/Nuke11.2v3/Nuke11.2v3.app/Contents/MacOS/libnuke-11.2.3.dylib -nx
+version 11.2 v3
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="1485" y="28" w="1687" h="1052" screen="1">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1024" stretch="1"/>
+            <splitter orientation="2">
+                <split size="658"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="369"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name /Users/matthias/Workspace/ampas/aces_gamut_vwg/nuke/gamut_mapper_equal_hue_line_comparison_v01.nk
+ frame 17
+ first_frame 0
+ last_frame 0
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ label "Generate Gamut Plot\n(read the sticky note above\nto get more than one plot line)"
+ note_font_size 36
+ xpos -782
+ ypos 478
+ bdwidth 1093
+ bdheight 715
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode10
+ label "Generate Gamut Plot of\npolar grid compressed by\nJed Smith gamut mapper"
+ note_font_size 36
+ xpos -1654
+ ypos 482
+ bdwidth 842
+ bdheight 710
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ label "Generate hue lines from gaussian\nspectral bandwidth expansion"
+ note_font_size 36
+ xpos -779
+ ypos -856
+ bdwidth 1085
+ bdheight 1308
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode4
+ tile_color 0x777777ff
+ label "Generate CIE XYZ\nspectral locus samples"
+ note_font_size 20
+ xpos -718
+ ypos -728
+ bdwidth 355
+ bdheight 790
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode5
+ tile_color 0x777777ff
+ label "integrate spectral locus values\nwith gaussian\ndistribution ramp"
+ note_font_size 20
+ xpos -327
+ ypos -278
+ bdwidth 260
+ bdheight 325
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode6
+ tile_color 0x777777ff
+ label "Repeat the process for different\npositions on the locus and merge\nthe results into single frame buffer "
+ note_font_size 20
+ xpos -333
+ ypos 67
+ bdwidth 625
+ bdheight 363
+ z_order 1
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x606060ff
+ label "add line of purples"
+ note_font_size 20
+ xpos -701
+ ypos -393
+ bdwidth 297
+ bdheight 308
+ z_order 2
+}
+StickyNote {
+ inputs 0
+ name StickyNote1
+ label "The \"input length\" knob\nof the TimeWarp sets\nthe number of plotted lines\n\nwriggle the \"size\" knob of\nthe Blur node a bit (and reset to 0)\nto force Nuke to properly\nevaluate the TimeWarp\n"
+ note_font_size 30
+ xpos -158
+ ypos 156
+}
+StickyNote {
+ inputs 0
+ name StickyNote2
+ label "Plot in xy or u'v'\nis set from here"
+ note_font_size 30
+ xpos -1165
+ ypos 576
+}
+Group {
+ inputs 0
+ name SpectralLocus3
+ xpos -559
+ ypos 797
+ addUserKnob {20 User}
+ addUserKnob {6 colorize +STARTLINE}
+ addUserKnob {41 value T Multiply1.value}
+ addUserKnob {26 wavelength}
+ addUserKnob {7 start -STARTLINE R 375 780}
+ start 375
+ addUserKnob {7 end R 375 780}
+ end 780
+ addUserKnob {6 purples l "show \"line of purples\"" +STARTLINE}
+ purples true
+ addUserKnob {41 plotColorSpace T Switch3.which}
+}
+ Constant {
+  inputs 0
+  channels rgb
+  format "16384 2 0 0 16384 2 1 14bit_lut"
+  name bg1
+  xpos 507
+  ypos -17
+  addUserKnob {20 User}
+  addUserKnob {7 wl}
+  wl {{clamp(frame+375,375,780)}}
+ }
+set N21cfb9c0 [stack 0]
+ Ramp {
+  p0 {0 1}
+  p1 {16383 1}
+  name Ramp4
+  xpos 507
+  ypos 55
+ }
+set N226341e0 [stack 0]
+ Dot {
+  name Dot8
+  note_font "Bitstream Vera Sans"
+  xpos 681
+  ypos 58
+ }
+ Multiply {
+  value {-0.001319684205 -0.565 -0.26 1}
+  name Multiply2
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 122
+ }
+ Add {
+  value {0.001419684151 0.737 0.2637 1}
+  name Add7
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 158
+ }
+ Shuffle {
+  alpha white
+  name Shuffle22
+  label "\[value in]-->\[value out]"
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 207
+ }
+ Transform {
+  translate {13300 0}
+  scale {0.1883 1}
+  center {0 1}
+  filter Impulse
+  name Transform1
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 243
+ }
+ Dot {
+  name Dot9
+  note_font "Bitstream Vera Sans"
+  xpos 681
+  ypos 376
+ }
+push $N21cfb9c0
+ Rectangle {
+  area {{width*((parent.start-375)/405)} 0 {width*((parent.end-375)/405)} 2}
+  name Rectangle7
+  xpos 289
+  ypos 130
+ }
+push $N226341e0
+ Multiply {
+  value 405
+  name Multiply4
+  xpos 507
+  ypos 81
+ }
+ Add {
+  value 375
+  name Add3
+  xpos 507
+  ypos 119
+ }
+ ColorLookup {
+  lut {master {}
+    red {curve x380 0.0014 x385 0.0022 0.0042 0.0076 0.0143 0.0232 0.0435 0.0776 0.1344 0.2148 0.2839 0.3285 0.3483 0.3481 0.3362 0.3187 0.2908 0.2511 0.1954 0.1421 0.0956 0.058 0.032 0.0147 0.0049 0.0024 0.0093 0.0291 0.0633 0.1096 0.1655 0.2257 0.2904 0.3597 0.4334 0.5121 0.5945 0.6784 0.7621 0.8425 0.9163 0.9786 1.0263 1.0567 1.0622 1.0456 1.0026 0.9384 0.8544 0.7514 0.6424 0.5419 0.4479 0.3608 0.2835 0.2187 0.1649 0.1212 0.0874 0.0636 0.0468 0.0329 0.0227 0.0158 0.0114 0.0081 0.0058 0.0041 0.0029 0.002 0.0014 0.001 0.0007 0.0005 0.0003 0.0002 0.0002 0.0001 0.0001 0.0001 0}
+    green {curve x380 0 x385 0.0001 0.0001 0.0002 0.0004 0.0006 0.0012 0.0022 0.004 0.0073 0.0116 0.0168 0.023 0.0298 0.038 0.048 0.06 0.0739 0.091 0.1126 0.139 0.1693 0.208 0.2586 0.323 0.4073 0.503 0.6082 0.71 0.7932 0.862 0.9149 0.954 0.9803 0.995 1 0.995 0.9786 0.952 0.9154 0.87 0.8163 0.757 0.6949 0.631 0.5668 0.503 0.4412 0.381 0.321 0.265 0.217 0.175 0.1382 0.107 0.0816 0.061 0.0446 0.032 0.0232 0.017 0.0119 0.0082 0.0057 0.0041 0.0029 0.0021 0.0015 0.001 0.0007 0.0005 0.0004 0.0002 0.0002 0.0001 0.0001 0.0001 0 0 0 0}
+    blue {curve x375 0 x380 0.0065 0.0105 0.0201 0.0362 0.0679 0.1102 0.2074 0.3713 0.6456 1.0391 1.3856 1.623 1.7471 1.7826 1.7721 1.7441 1.6692 1.5281 1.2876 1.0419 0.831 0.6162 0.4652 0.3533 0.272 0.2123 0.1582 0.1117 0.0782 0.0573 0.0422 0.0298 0.0203 0.0134 0.0087 0.0057 0.0039 0.0027 0.0021 0.0018 0.0017 0.0014 0.0011 0.001 0.0008 0.0006 0.0003 0.0002 0.0002 0.0001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0}
+    alpha {}}
+  name ColorLookup2
+  xpos 507
+  ypos 157
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge22
+  xpos 507
+  ypos 226
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  colorspace_out CIE-Yxy
+  name Colorspace1
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 297
+ }
+ Crop {
+  box {500 0 13800 2}
+  name Crop13
+  xpos 507
+  ypos 321
+ }
+ Transform {
+  translate {-500 0}
+  center {8192 1}
+  name Transform3
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 349
+ }
+ Merge2 {
+  inputs 2
+  name Merge1
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 373
+  disable {{!parent.purples}}
+ }
+ Expression {
+  expr0 "r < 0 ? r * sole.r + lift.r : r < lift.r * 2 ? pow( (lift.r *2 - r) / (lift.r * 2), 2) * lift.r + r : r"
+  expr1 "g < 0 ? g * sole.g + lift.g : g < lift.g * 2 ? pow( (lift.g *2 - g) / (lift.g * 2), 2) * lift.g + g : g"
+  expr2 "b < 0 ? b * sole.b + lift.b : b < lift.b * 2 ? pow( (lift.b *2 - b) / (lift.b * 2), 2) * lift.b + b : b"
+  name ToeExpr1
+  selected true
+  xpos 507
+  ypos 397
+  addUserKnob {20 User}
+  addUserKnob {18 lift}
+  lift {0.15 0 0}
+  addUserKnob {6 lift_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  lift_panelDropped true
+  addUserKnob {6 lift_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 sole R 0 0.1}
+  sole {0 0 0}
+  addUserKnob {6 sole_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Colorspace {
+  colorspace_in CIE-Yxy
+  colorspace_out CIE-XYZ
+  name Colorspace2
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 421
+ }
+set N2231d2d0 [stack 0]
+ Colorspace {
+  colorspace_in CIE-XYZ
+  colorspace_out CIE-Yxy
+  primary_out "CIE (1931)"
+  name Colorspace15
+  xpos 347
+  ypos 612
+ }
+ Dot {
+  name Dot1
+  xpos 381
+  ypos 636
+ }
+set N23bd5340 [stack 0]
+ Dot {
+  name Dot2
+  xpos 487
+  ypos 636
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression1
+  label "Yxy -> Yu'v'"
+  xpos 453
+  ypos 661
+ }
+push $N23bd5340
+ Switch {
+  inputs 2
+  which {{GamutGrid1.colorSpace}}
+  name Switch3
+  xpos 347
+  ypos 665
+ }
+push $N2231d2d0
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 640
+  ypos 571
+ }
+ Multiply {
+  value {1 1 1 1}
+  name Multiply1
+  xpos 640
+  ypos 597
+ }
+push $N2231d2d0
+ ColorMatrix {
+  matrix {
+      {1.04981102 0 -9.748e-05}
+      {-0.49590302 1.37331305 0.09824004}
+      {0 0 0.99125202}
+    }
+  name ColorMatrix3
+  xpos 507
+  ypos 572
+ }
+ Shuffle {
+  alpha white
+  name Shuffle2
+  label "\[value in]-->\[value out]"
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 596
+ }
+ Switch {
+  inputs 2
+  which {{parent.colorize}}
+  name Switch1
+  xpos 569
+  ypos 655
+ }
+ BlinkScript {
+  inputs 2
+  recompileCount 2
+  ProgramGroup 1
+  KernelDescription "2 \"plot_cie_xy\" iterate pixelWise fc48d30b761944f4622c7e7cade9c548789bc618dc38d8ca992161542531f81f 3 \"col\" Read Random \"Yxy\" Read Random \"dst\" Write Random 3 \"padding\" Float 1 AAAAAA== \"left_margin\" Float 1 AAAAAA== \"process_input\" Bool 1 AA== 3 \"padding\" 1 1 \"left_margin\" 1 1 \"process_input\" 1 1 2 \"outsize\" Float 1 1 AAAAAA== \"offset\" Float 1 1 AAAAAA=="
+  kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> col;\n  Image<eRead, eAccessRandom, eEdgeClamped> Yxy;\n  Image<eWrite, eAccessRandom> dst;\n\nparam:\n  float padding;\n  float left_margin;\n  bool process_input;\n\n\nlocal:\n  float outsize;\n  float offset;\n\n  void init() \{\n    // calculate output width and height and offset based on padding\n    outsize = dst.bounds.height()/padding;\n    // xy offset for margin on lower left corner\n    offset = dst.bounds.height()*left_margin;\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of the iteration. Essentially a single thread.\n    if ( pos.x > 1 || pos.y > 1) \{ return; \}\n    // Loop over all pixels in input Yxy\n    if (process_input) \{\n      for ( int j = Yxy.bounds.y1; j < Yxy.bounds.y2; j++) \{\n        for ( int i = Yxy.bounds.x1; i < Yxy.bounds.x2; i++) \{\n          // sample Yxy pixel at position i, j\n          float2 xy = float2(Yxy(i, j, 1), Yxy(i, j, 2));\n          // don't process black pixels\n          if( xy.x == 0.0f && xy.y == 0.0f) \{ continue; \}\n          // calculate output position: xy chromaticity coordinates at centered output pixel position\n          float2 out_pos = float2(xy.x * outsize + offset, xy.y * outsize + offset);\n          // Write color value to xy sample position in dst\n          if ( dst.bounds.inside(out_pos.x, out_pos.y)) \{ dst(out_pos.x, out_pos.y) = col(i, j); \}\n        \}\n      \}\n    \}\n  \}\n\};"
+  vectorize false
+  rebuild ""
+  plot_cie_xy_padding 1
+  plot_cie_xy_process_input true
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  specifiedFormat true
+  rebuild_finalise ""
+  name Plot_Input
+  xpos 569
+  ypos 737
+ }
+ Output {
+  name Output1
+  xpos 569
+  ypos 820
+ }
+push $N2231d2d0
+ Reformat {
+  resize distort
+  name Reformat1
+  xpos 823
+  ypos 451
+ }
+end_group
+push 0
+Group {
+ inputs 0
+ name GenGamut3
+ xpos -412
+ ypos 798
+ addUserKnob {20 User}
+ addUserKnob {4 gamut M {ACES ACEScg "Rec709 / sRGB" Rec2020 P3 AlexaWideGamut REDColor2 REDColor3 REDColor4 DRAGONcolor DRAGONcolor2 REDWideGamutRGB SGamut SGamut3 SGamut3.Cine ProPhoto "CIE XYZ" "Huge Gamut AP0 x 2" ""}}
+ gamut ACEScg
+ addUserKnob {41 value l color T Multiply4.value}
+ addUserKnob {41 plotColorSpace T Switch3.which}
+}
+ ColorWheel {
+  inputs 0
+  format "256 256 0 0 256 256 1 square_256"
+  centerSaturation 1
+  name ColorWheel4
+  xpos 444
+  ypos -23
+ }
+ Dot {
+  name Dot3
+  xpos 478
+  ypos 96
+ }
+set N21c500a0 [stack 0]
+ ColorMatrix {
+  matrix {
+      {{"\[python (0.9525523959, 0.6624541811, 0.4123907993, 0.6369580483, 0.4865709486, 0.6380076193, 0.4581609159, 0.4878301118, 0.4516946649, 0.5070147865, 0.4462154077, 0.7352752459, 0.7064827132, 0.7064827132, 0.5990839208, 0.7976672348, 1.0000000000, 1.48804061)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.1340042065, 0.3575843394, 0.1446169036, 0.2656676932, 0.2147038563, 0.3832048061, 0.3432736678, 0.3178467119, 0.3587783652, 0.3157557129, 0.0686094106, 0.1288010498, 0.1288010498, 0.2489255161, 0.1351922306, 0.0000000000, -0.23423647)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000936786, 0.1561876870, 0.1804807884, 0.1688809752, 0.1982172852, 0.0977444514, 0.1112803526, 0.1215422950, 0.1831046977, 0.0868529229, 0.1906749540, 0.1465712705, 0.1151721641, 0.1151721641, 0.1024464902, 0.0313525290, 0.0000000000, -0.3011580651)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.3439664498, 0.2722287168, 0.2126390059, 0.2627002120, 0.2289745641, 0.2919537790, 0.1694420971, 0.2289038124, 0.2119478695, 0.2207240223, 0.1942557952, 0.2866940995, 0.2709796708, 0.2709796708, 0.2150758201, 0.2880374539, 0.0000000000, 0.2501373809)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.7281660966, 0.6740817658, 0.7151686788, 0.6779980715, 0.6917385218, 0.8238410415, 0.8648282025, 0.7808598244, 0.7230197720, 0.8391880546, 0.7385568692, 0.8429791340, 0.7866064112, 0.7866064112, 0.8850685017, 0.7118768834, 1.0000000000, 1.210452347)\\\[\[numvalue gamut]\\]]\n"} {"\[python (-0.0721325464, 0.0536895174, 0.0721923154, 0.0593017165, 0.0792869141, -0.1157948205, -0.0342702996, -0.0097636368, 0.0650323585, -0.0599120769, 0.0671873356, -0.1296732335, -0.0575860820, -0.0575860820, -0.1001443219, 0.0000856626, 0.0000000000, -0.4605897283)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.0000000000, -0.0055746495, 0.0193308187, 0.0000000000, 0.0000000000, 0.0027982790, -0.1061849690, -0.0210075899, -0.0194509094, -0.0544519405, -0.0479226710, -0.0796808569, -0.0096778454, -0.0096778454, -0.0320658495, 0.0000000000, 0.0000000000, -0.4416591448)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.0040607335, 0.1191947798, 0.0280726930, 0.0451133819, -0.0670342357, 0.0255435258, 0.0178269864, 0.0165064159, -0.0003228254, -0.0002844886, -0.3473432170, 0.0046000375, 0.0046000375, -0.0276583907, 0.0000000000, 0.0000000000, -0.2480497808)\\\[\[numvalue gamut]\\]]\n"} {"\[python (1.0088251844, 1.0103391003, 0.9505321522, 1.0609850577, 1.0439443689, 1.1532937074, 1.0894666276, 1.0120057879, 1.0117696778, 1.0635999502, 1.0570323440, 1.5160818246, 1.0941355587, 1.0941355587, 1.1487819910, 0.8251882845, 1.0000000000, 1.69853411)\\\[\[numvalue gamut]\\]]\n"}}
+    }
+  name ColorMatrix2
+  label "input to XYZ"
+  note_font "Bitstream Vera Sans"
+  selected true
+  xpos 584
+  ypos 174
+  addUserKnob {20 User}
+  addUserKnob {3 gamut}
+  gamut {{parent.gamut}}
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  illuminant_in ACES
+  primary_in ACES
+  colorspace_out CIE-Yxy
+  name Colorspace3
+  xpos 584
+  ypos 210
+ }
+ Dot {
+  name Dot8
+  xpos 618
+  ypos 240
+ }
+set N21ea6a10 [stack 0]
+ Dot {
+  name Dot9
+  xpos 724
+  ypos 240
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression1
+  label "Yxy -> Yu'v'"
+  xpos 690
+  ypos 265
+ }
+push $N21ea6a10
+ Switch {
+  inputs 2
+  which {{GamutGrid1.colorSpace}}
+  name Switch3
+  xpos 584
+  ypos 269
+ }
+push $N21c500a0
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 444
+  ypos 151
+ }
+ Multiply {
+  value {1 0 0 1}
+  name Multiply4
+  xpos 444
+  ypos 204
+ }
+ BlinkScript {
+  inputs 2
+  recompileCount 2
+  ProgramGroup 1
+  KernelDescription "2 \"plot_cie_xy\" iterate pixelWise fc48d30b761944f4622c7e7cade9c548789bc618dc38d8ca992161542531f81f 3 \"col\" Read Random \"Yxy\" Read Random \"dst\" Write Random 3 \"padding\" Float 1 AAAAAA== \"left_margin\" Float 1 AAAAAA== \"process_input\" Bool 1 AA== 3 \"padding\" 1 1 \"left_margin\" 1 1 \"process_input\" 1 1 2 \"outsize\" Float 1 1 AAAAAA== \"offset\" Float 1 1 AAAAAA=="
+  kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> col;\n  Image<eRead, eAccessRandom, eEdgeClamped> Yxy;\n  Image<eWrite, eAccessRandom> dst;\n\nparam:\n  float padding;\n  float left_margin;\n  bool process_input;\n\n\nlocal:\n  float outsize;\n  float offset;\n\n  void init() \{\n    // calculate output width and height and offset based on padding\n    outsize = dst.bounds.height()/padding;\n    // xy offset for margin on lower left corner\n    offset = dst.bounds.height()*left_margin;\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of the iteration. Essentially a single thread.\n    if ( pos.x > 1 || pos.y > 1) \{ return; \}\n    // Loop over all pixels in input Yxy\n    if (process_input) \{\n      for ( int j = Yxy.bounds.y1; j < Yxy.bounds.y2; j++) \{\n        for ( int i = Yxy.bounds.x1; i < Yxy.bounds.x2; i++) \{\n          // sample Yxy pixel at position i, j\n          float2 xy = float2(Yxy(i, j, 1), Yxy(i, j, 2));\n          // don't process black pixels\n          if( xy.x == 0.0f && xy.y == 0.0f) \{ continue; \}\n          // calculate output position: xy chromaticity coordinates at centered output pixel position\n          float2 out_pos = float2(xy.x * outsize + offset, xy.y * outsize + offset);\n          // Write color value to xy sample position in dst\n          if ( dst.bounds.inside(out_pos.x, out_pos.y)) \{ dst(out_pos.x, out_pos.y) = col(i, j); \}\n        \}\n      \}\n    \}\n  \}\n\};"
+  vectorize false
+  rebuild ""
+  plot_cie_xy_padding 1
+  plot_cie_xy_process_input true
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  specifiedFormat true
+  rebuild_finalise ""
+  name Plot_Input
+  xpos 444
+  ypos 265
+ }
+ Output {
+  name Output1
+  xpos 444
+  ypos 403
+ }
+end_group
+Constant {
+ inputs 0
+ channels rgb
+ format "16384 2 0 0 16384 2 1 14bit_lut"
+ name bg2
+ xpos -649
+ ypos -634
+ addUserKnob {20 User}
+ addUserKnob {7 wl}
+ wl {{clamp(frame+375,375,780)}}
+}
+Ramp {
+ p0 {0 1}
+ p1 {16383 1}
+ name Ramp2
+ xpos -649
+ ypos -562
+}
+set N641f5ea0 [stack 0]
+Dot {
+ name Dot8
+ note_font "Bitstream Vera Sans"
+ xpos -475
+ ypos -559
+}
+Multiply {
+ value {-0.001319684205 -0.565 -0.26 1}
+ name Multiply2
+ note_font "Bitstream Vera Sans"
+ xpos -509
+ ypos -335
+}
+Add {
+ value {0.001419684151 0.737 0.2637 1}
+ name Add7
+ note_font "Bitstream Vera Sans"
+ xpos -509
+ ypos -299
+}
+Shuffle {
+ alpha white
+ name Shuffle22
+ label "\[value in]-->\[value out]"
+ note_font "Bitstream Vera Sans"
+ xpos -509
+ ypos -250
+}
+Transform {
+ translate {13300 0}
+ scale {0.1883 1}
+ center {0 1}
+ filter Impulse
+ name Transform1
+ note_font "Bitstream Vera Sans"
+ xpos -509
+ ypos -214
+}
+Dot {
+ name Dot9
+ note_font "Bitstream Vera Sans"
+ xpos -475
+ ypos -162
+}
+push $N641f5ea0
+Multiply {
+ value 405
+ name Multiply1
+ xpos -649
+ ypos -536
+}
+Add {
+ value 375
+ name Add1
+ xpos -649
+ ypos -498
+}
+ColorLookup {
+ lut {master {}
+   red {curve x380 0.0014 x385 0.0022 0.0042 0.0076 0.0143 0.0232 0.0435 0.0776 0.1344 0.2148 0.2839 0.3285 0.3483 0.3481 0.3362 0.3187 0.2908 0.2511 0.1954 0.1421 0.0956 0.058 0.032 0.0147 0.0049 0.0024 0.0093 0.0291 0.0633 0.1096 0.1655 0.2257 0.2904 0.3597 0.4334 0.5121 0.5945 0.6784 0.7621 0.8425 0.9163 0.9786 1.0263 1.0567 1.0622 1.0456 1.0026 0.9384 0.8544 0.7514 0.6424 0.5419 0.4479 0.3608 0.2835 0.2187 0.1649 0.1212 0.0874 0.0636 0.0468 0.0329 0.0227 0.0158 0.0114 0.0081 0.0058 0.0041 0.0029 0.002 0.0014 0.001 0.0007 0.0005 0.0003 0.0002 0.0002 0.0001 0.0001 0.0001 0}
+   green {curve x380 0 x385 0.0001 0.0001 0.0002 0.0004 0.0006 0.0012 0.0022 0.004 0.0073 0.0116 0.0168 0.023 0.0298 0.038 0.048 0.06 0.0739 0.091 0.1126 0.139 0.1693 0.208 0.2586 0.323 0.4073 0.503 0.6082 0.71 0.7932 0.862 0.9149 0.954 0.9803 0.995 1 0.995 0.9786 0.952 0.9154 0.87 0.8163 0.757 0.6949 0.631 0.5668 0.503 0.4412 0.381 0.321 0.265 0.217 0.175 0.1382 0.107 0.0816 0.061 0.0446 0.032 0.0232 0.017 0.0119 0.0082 0.0057 0.0041 0.0029 0.0021 0.0015 0.001 0.0007 0.0005 0.0004 0.0002 0.0002 0.0001 0.0001 0.0001 0 0 0 0}
+   blue {curve x375 0 x380 0.0065 0.0105 0.0201 0.0362 0.0679 0.1102 0.2074 0.3713 0.6456 1.0391 1.3856 1.623 1.7471 1.7826 1.7721 1.7441 1.6692 1.5281 1.2876 1.0419 0.831 0.6162 0.4652 0.3533 0.272 0.2123 0.1582 0.1117 0.0782 0.0573 0.0422 0.0298 0.0203 0.0134 0.0087 0.0057 0.0039 0.0027 0.0021 0.0018 0.0017 0.0014 0.0011 0.001 0.0008 0.0006 0.0003 0.0002 0.0002 0.0001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0}
+   alpha {}}
+ name ColorLookup1
+ label "CIE 1931 CMFs"
+ xpos -649
+ ypos -443
+}
+Colorspace {
+ colorspace_in CIE-XYZ
+ colorspace_out CIE-Yxy
+ name Colorspace1
+ note_font "Bitstream Vera Sans"
+ xpos -649
+ ypos -241
+}
+Crop {
+ box {500 0 13800 2}
+ name Crop13
+ xpos -649
+ ypos -217
+}
+Transform {
+ translate {-500 0}
+ center {8192 1}
+ name Transform3
+ note_font "Bitstream Vera Sans"
+ xpos -649
+ ypos -189
+}
+Merge2 {
+ inputs 2
+ name Merge5
+ note_font "Bitstream Vera Sans"
+ xpos -649
+ ypos -165
+}
+Colorspace {
+ colorspace_in CIE-Yxy
+ colorspace_out CIE-XYZ
+ name Colorspace2
+ note_font "Bitstream Vera Sans"
+ xpos -649
+ ypos -141
+}
+Reformat {
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ resize distort
+ filter Impulse
+ name Reformat3
+ xpos -649
+ ypos -25
+}
+Constant {
+ inputs 0
+ format "1024 1024 0 0 1024 1024 1 square_1K"
+ name Constant1
+ xpos -256
+ ypos -197
+}
+Ramp {
+ p0 {0 {height/2}}
+ p1 {{width-1} {height/2}}
+ name Ramp3
+ xpos -256
+ ypos -125
+}
+Expression {
+ expr0 peak*exp(-(pow(r-center.r,2)/(2*pow(size*pow(y/height,2),2))))
+ expr1 peak*exp(-(pow(g-center.g,2)/(2*pow(size*pow(y/height,2),2))))
+ expr2 peak*exp(-(pow(b-center.b,2)/(2*pow(size*pow(y/height,2),2))))
+ name Expression3
+ xpos -256
+ ypos -101
+ addUserKnob {20 User}
+ addUserKnob {7 peak R 0 2}
+ peak 1
+ addUserKnob {18 center}
+ center {{frame/TimeWarp1.length} {center.r-1 x1 -0.18} {center.r+1 x1 1.82}}
+ addUserKnob {6 center_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ center_panelDropped true
+ addUserKnob {6 center_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 center_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 center_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 center_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {7 size}
+ size 0.5
+}
+Expression {
+ expr0 r+g+b
+ expr1 r+g+b
+ expr2 r+g+b
+ name Expression4
+ xpos -256
+ ypos -77
+}
+Merge2 {
+ inputs 2
+ operation multiply
+ name Merge7
+ xpos -256
+ ypos -21
+}
+BlinkScript {
+ recompileCount 5
+ ProgramGroup 1
+ KernelDescription "2 \"plot_cie_xy\" iterate pixelWise ae803ea28f1fd6336a851ade4f3560456f481ee59a6b1a9654a028693eac49cb 2 \"src\" Read Random \"dst\" Write Random 0 0 0"
+ kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> src;\n  Image<eWrite, eAccessRandom> dst;\n\n  void init() \{\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of each line.\n    if ( pos.x > 1) \{ return; \}\n    // Loop over all pixels in the current line\n    float4 output(0,0,0,0);\n        for ( int i = src.bounds.x1; i < src.bounds.x2; i++) \{\n          output += src(i, pos.y);\n        \}\n    dst(0,pos.y) = output;\n\n  \}\n\};"
+ rebuild ""
+ rebuild_finalise ""
+ name BlinkScript4
+ xpos -256
+ ypos 3
+}
+Crop {
+ box {0 0 {TimeWarp1.length} {input.height}}
+ reformat true
+ intersect true
+ crop false
+ name Crop4
+ xpos -256
+ ypos 181
+}
+Transform {
+ translate {{frame} 0}
+ center {25 256}
+ name Transform2
+ xpos -256
+ ypos 205
+}
+TimeWarp {
+ length 65
+ time ""
+ name TimeWarp1
+ xpos -256
+ ypos 229
+}
+Multiply {
+ value 2
+ name Multiply3
+ xpos -256
+ ypos 253
+}
+Blur {
+ name Blur1
+ xpos -256
+ ypos 285
+}
+Dot {
+ name Dot1
+ xpos -222
+ ypos 652
+}
+set N52935420 [stack 0]
+Colorspace {
+ colorspace_in CIE-XYZ
+ colorspace_out sRGB
+ name Colorspace4
+ xpos -165
+ ypos 730
+}
+push $N52935420
+Group {
+ inputs 2
+ name PlotGamut3
+ xpos -256
+ ypos 793
+ addUserKnob {20 User}
+ addUserKnob {6 colorize +STARTLINE}
+ colorize true
+ addUserKnob {4 gamut M {"Adobe (1998)" Apple "Best RGB" "Beta RGB" "Bruce RGB" "CIE (1931)" ColorMatch DCI-P3 "Don RGB 4" "ECI RGB" "Ekta Space PS5" "NTSC (1953)" PAL/SECAM ProPhoto SMPTE-C sRGB "Wide Gamut" AlexaV3LogC "Sony S-Gamut" ACES Rec.2020 ACEScg "CIE XYZ"}}
+ gamut "CIE XYZ"
+ addUserKnob {41 value l color T Multiply4.value}
+ addUserKnob {41 plotColorSpace T Switch3.which}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 444
+  ypos 16
+ }
+ Dot {
+  name Dot3
+  xpos 478
+  ypos 82
+ }
+set N21e11200 [stack 0]
+ Dot {
+  name Dot2
+  xpos 723
+  ypos 82
+ }
+set N21e13670 [stack 0]
+ Colorspace {
+  colorspace_in CIE-XYZ
+  primary_in ACES
+  colorspace_out CIE-Yxy
+  name Colorspace2
+  xpos 787
+  ypos 166
+ }
+push $N21e13670
+ ColorMatrix {
+  matrix {
+      {0.6624541811 0.1340042065 0.156187687}
+      {0.2722287168 0.6740817658 0.0536895174}
+      {-0.0055746495 0.0040607335 1.0103391}
+    }
+  name ColorMatrix1
+  label "ACEScg -> XYZ (none)"
+  xpos 689
+  ypos 152
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  illuminant_in ACES
+  primary_in ACES
+  colorspace_out CIE-Yxy
+  name Colorspace1
+  xpos 689
+  ypos 184
+ }
+push $N21e13670
+ Colorspace {
+  primary_in {{parent.gamut}}
+  colorspace_out CIE-Yxy
+  primary_out "CIE (1931)"
+  name Colorspace14
+  xpos 579
+  ypos 170
+ }
+ Switch {
+  inputs 3
+  which {{"parent.gamut == 21 ? 1 : parent.gamut == 22 ? 2 : 0"}}
+  name Switch1
+  xpos 689
+  ypos 249
+ }
+ Dot {
+  name Dot8
+  xpos 723
+  ypos 279
+ }
+set N209e4b30 [stack 0]
+ Dot {
+  name Dot9
+  xpos 829
+  ypos 279
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression1
+  label "Yxy -> Yu'v'"
+  xpos 795
+  ypos 304
+ }
+push $N209e4b30
+ Switch {
+  inputs 2
+  which {{GamutGrid1.colorSpace}}
+  name Switch3
+  xpos 689
+  ypos 308
+ }
+ Dot {
+  name Dot1
+  xpos 723
+  ypos 342
+ }
+ Input {
+  inputs 0
+  name Color
+  xpos 327
+  ypos 16
+  number 1
+ }
+ Dot {
+  name Dot7
+  xpos 361
+  ypos 243
+ }
+push $N21e11200
+ Dot {
+  name Dot6
+  xpos 478
+  ypos 106
+ }
+set N209b40c0 [stack 0]
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 444
+  ypos 149
+ }
+ Multiply {
+  value {0 1 1 1}
+  name Multiply4
+  xpos 444
+  ypos 175
+ }
+push $N209b40c0
+ Dot {
+  name Dot4
+  xpos 554
+  ypos 106
+ }
+ Dot {
+  name Dot5
+  xpos 554
+  ypos 243
+ }
+ Switch {
+  inputs 3
+  which {{"\[exists parent.input1] ? 2 : parent.colorize"}}
+  name Switch2
+  xpos 444
+  ypos 239
+ }
+ BlinkScript {
+  inputs 2
+  recompileCount 2
+  ProgramGroup 1
+  KernelDescription "2 \"plot_cie_xy\" iterate pixelWise fc48d30b761944f4622c7e7cade9c548789bc618dc38d8ca992161542531f81f 3 \"col\" Read Random \"Yxy\" Read Random \"dst\" Write Random 3 \"padding\" Float 1 AAAAAA== \"left_margin\" Float 1 AAAAAA== \"process_input\" Bool 1 AA== 3 \"padding\" 1 1 \"left_margin\" 1 1 \"process_input\" 1 1 2 \"outsize\" Float 1 1 AAAAAA== \"offset\" Float 1 1 AAAAAA=="
+  kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> col;\n  Image<eRead, eAccessRandom, eEdgeClamped> Yxy;\n  Image<eWrite, eAccessRandom> dst;\n\nparam:\n  float padding;\n  float left_margin;\n  bool process_input;\n\n\nlocal:\n  float outsize;\n  float offset;\n\n  void init() \{\n    // calculate output width and height and offset based on padding\n    outsize = dst.bounds.height()/padding;\n    // xy offset for margin on lower left corner\n    offset = dst.bounds.height()*left_margin;\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of the iteration. Essentially a single thread.\n    if ( pos.x > 1 || pos.y > 1) \{ return; \}\n    // Loop over all pixels in input Yxy\n    if (process_input) \{\n      for ( int j = Yxy.bounds.y1; j < Yxy.bounds.y2; j++) \{\n        for ( int i = Yxy.bounds.x1; i < Yxy.bounds.x2; i++) \{\n          // sample Yxy pixel at position i, j\n          float2 xy = float2(Yxy(i, j, 1), Yxy(i, j, 2));\n          // don't process black pixels\n          if( xy.x == 0.0f && xy.y == 0.0f) \{ continue; \}\n          // calculate output position: xy chromaticity coordinates at centered output pixel position\n          float2 out_pos = float2(xy.x * outsize + offset, xy.y * outsize + offset);\n          // Write color value to xy sample position in dst\n          if ( dst.bounds.inside(out_pos.x, out_pos.y)) \{ dst(out_pos.x, out_pos.y) = col(i, j); \}\n        \}\n      \}\n    \}\n  \}\n\};"
+  vectorize false
+  rebuild ""
+  plot_cie_xy_padding 1
+  plot_cie_xy_process_input true
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  specifiedFormat true
+  rebuild_finalise ""
+  name Plot_Input
+  selected true
+  xpos 444
+  ypos 335
+ }
+ Output {
+  name Output1
+  xpos 444
+  ypos 403
+ }
+end_group
+Merge2 {
+ inputs 3+1
+ name Merge3
+ xpos -412
+ ypos 936
+}
+Dilate {
+ size 1
+ name Dilate2
+ xpos -412
+ ypos 980
+}
+Crop {
+ box {0 0 1536 1732}
+ reformat true
+ crop false
+ name Crop1
+ xpos -412
+ ypos 1069
+}
+Reformat {
+ type scale
+ scale 0.612
+ name Reformat1
+ xpos -412
+ ypos 1093
+}
+Text2 {
+ font_size_toolbar 100
+ font_width_toolbar 100
+ font_height_toolbar 100
+ message "hue lines from gaussian\nspectral bandwidth expansion"
+ old_message {{104 117 101 32 108 105 110 101 115 32 102 114 111 109 32 103 97 117 115 115 105 97 110 10 115 112 101 99 116 114 97 108 32 98 97 110 100 119 105 100 116 104 32 101 120 112 97 110 115 105 111 110}
+   }
+ box {0 0 {input.width} {input.height}}
+ xjustify right
+ transforms {{0 2}
+   }
+ global_font_scale 0.5
+ center {470 530}
+ cursor_initialised true
+ autofit_bbox false
+ initial_cursor_position {{940 1060}
+   }
+ group_animations {{0} imported: 0 selected: items: "root transform/"}
+ animation_layers {{1 11 470 530 0 0 1 1 0 0 0 0}
+   }
+ color {1 1 1 1}
+ name Text1
+ xpos -412
+ ypos 1117
+}
+Group {
+ inputs 0
+ name SpectralLocus2
+ xpos -1527
+ ypos 844
+ addUserKnob {20 User}
+ addUserKnob {6 colorize +STARTLINE}
+ addUserKnob {41 value T Multiply1.value}
+ addUserKnob {26 wavelength}
+ addUserKnob {7 start -STARTLINE R 375 780}
+ start 375
+ addUserKnob {7 end R 375 780}
+ end 780
+ addUserKnob {6 purples l "show \"line of purples\"" +STARTLINE}
+ purples true
+ addUserKnob {41 plotColorSpace T Switch3.which}
+}
+ Constant {
+  inputs 0
+  channels rgb
+  format "16384 2 0 0 16384 2 1 14bit_lut"
+  name bg1
+  xpos 507
+  ypos -17
+  addUserKnob {20 User}
+  addUserKnob {7 wl}
+  wl {{clamp(frame+375,375,780)}}
+ }
+set N222ef800 [stack 0]
+ Ramp {
+  p0 {0 1}
+  p1 {16383 1}
+  name Ramp4
+  xpos 507
+  ypos 55
+ }
+set N222f43a0 [stack 0]
+ Dot {
+  name Dot8
+  note_font "Bitstream Vera Sans"
+  xpos 681
+  ypos 58
+ }
+ Multiply {
+  value {-0.001319684205 -0.565 -0.26 1}
+  name Multiply2
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 122
+ }
+ Add {
+  value {0.001419684151 0.737 0.2637 1}
+  name Add7
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 158
+ }
+ Shuffle {
+  alpha white
+  name Shuffle22
+  label "\[value in]-->\[value out]"
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 207
+ }
+ Transform {
+  translate {13300 0}
+  scale {0.1883 1}
+  center {0 1}
+  filter Impulse
+  name Transform1
+  note_font "Bitstream Vera Sans"
+  xpos 647
+  ypos 243
+ }
+ Dot {
+  name Dot9
+  note_font "Bitstream Vera Sans"
+  xpos 681
+  ypos 376
+ }
+push $N222ef800
+ Rectangle {
+  area {{width*((parent.start-375)/405)} 0 {width*((parent.end-375)/405)} 2}
+  name Rectangle7
+  xpos 289
+  ypos 130
+ }
+push $N222f43a0
+ Multiply {
+  value 405
+  name Multiply4
+  xpos 507
+  ypos 81
+ }
+ Add {
+  value 375
+  name Add3
+  xpos 507
+  ypos 119
+ }
+ ColorLookup {
+  lut {master {}
+    red {curve x380 0.0014 x385 0.0022 0.0042 0.0076 0.0143 0.0232 0.0435 0.0776 0.1344 0.2148 0.2839 0.3285 0.3483 0.3481 0.3362 0.3187 0.2908 0.2511 0.1954 0.1421 0.0956 0.058 0.032 0.0147 0.0049 0.0024 0.0093 0.0291 0.0633 0.1096 0.1655 0.2257 0.2904 0.3597 0.4334 0.5121 0.5945 0.6784 0.7621 0.8425 0.9163 0.9786 1.0263 1.0567 1.0622 1.0456 1.0026 0.9384 0.8544 0.7514 0.6424 0.5419 0.4479 0.3608 0.2835 0.2187 0.1649 0.1212 0.0874 0.0636 0.0468 0.0329 0.0227 0.0158 0.0114 0.0081 0.0058 0.0041 0.0029 0.002 0.0014 0.001 0.0007 0.0005 0.0003 0.0002 0.0002 0.0001 0.0001 0.0001 0}
+    green {curve x380 0 x385 0.0001 0.0001 0.0002 0.0004 0.0006 0.0012 0.0022 0.004 0.0073 0.0116 0.0168 0.023 0.0298 0.038 0.048 0.06 0.0739 0.091 0.1126 0.139 0.1693 0.208 0.2586 0.323 0.4073 0.503 0.6082 0.71 0.7932 0.862 0.9149 0.954 0.9803 0.995 1 0.995 0.9786 0.952 0.9154 0.87 0.8163 0.757 0.6949 0.631 0.5668 0.503 0.4412 0.381 0.321 0.265 0.217 0.175 0.1382 0.107 0.0816 0.061 0.0446 0.032 0.0232 0.017 0.0119 0.0082 0.0057 0.0041 0.0029 0.0021 0.0015 0.001 0.0007 0.0005 0.0004 0.0002 0.0002 0.0001 0.0001 0.0001 0 0 0 0}
+    blue {curve x375 0 x380 0.0065 0.0105 0.0201 0.0362 0.0679 0.1102 0.2074 0.3713 0.6456 1.0391 1.3856 1.623 1.7471 1.7826 1.7721 1.7441 1.6692 1.5281 1.2876 1.0419 0.831 0.6162 0.4652 0.3533 0.272 0.2123 0.1582 0.1117 0.0782 0.0573 0.0422 0.0298 0.0203 0.0134 0.0087 0.0057 0.0039 0.0027 0.0021 0.0018 0.0017 0.0014 0.0011 0.001 0.0008 0.0006 0.0003 0.0002 0.0002 0.0001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0}
+    alpha {}}
+  name ColorLookup2
+  xpos 507
+  ypos 157
+ }
+ Merge2 {
+  inputs 2
+  operation multiply
+  name Merge22
+  xpos 507
+  ypos 226
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  colorspace_out CIE-Yxy
+  name Colorspace1
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 297
+ }
+ Crop {
+  box {500 0 13800 2}
+  name Crop13
+  xpos 507
+  ypos 321
+ }
+ Transform {
+  translate {-500 0}
+  center {8192 1}
+  name Transform3
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 349
+ }
+ Merge2 {
+  inputs 2
+  name Merge1
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 373
+  disable {{!parent.purples}}
+ }
+ Expression {
+  expr0 "r < 0 ? r * sole.r + lift.r : r < lift.r * 2 ? pow( (lift.r *2 - r) / (lift.r * 2), 2) * lift.r + r : r"
+  expr1 "g < 0 ? g * sole.g + lift.g : g < lift.g * 2 ? pow( (lift.g *2 - g) / (lift.g * 2), 2) * lift.g + g : g"
+  expr2 "b < 0 ? b * sole.b + lift.b : b < lift.b * 2 ? pow( (lift.b *2 - b) / (lift.b * 2), 2) * lift.b + b : b"
+  name ToeExpr1
+  selected true
+  xpos 507
+  ypos 397
+  addUserKnob {20 User}
+  addUserKnob {18 lift}
+  lift {0.15 0 0}
+  addUserKnob {6 lift_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  lift_panelDropped true
+  addUserKnob {6 lift_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {18 sole R 0 0.1}
+  sole {0 0 0}
+  addUserKnob {6 sole_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 sole_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {6 lift_panelDropped_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Colorspace {
+  colorspace_in CIE-Yxy
+  colorspace_out CIE-XYZ
+  name Colorspace2
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 421
+ }
+set N2222c410 [stack 0]
+ Colorspace {
+  colorspace_in CIE-XYZ
+  colorspace_out CIE-Yxy
+  primary_out "CIE (1931)"
+  name Colorspace15
+  xpos 347
+  ypos 612
+ }
+ Dot {
+  name Dot1
+  xpos 381
+  ypos 636
+ }
+set N1bff9a50 [stack 0]
+ Dot {
+  name Dot2
+  xpos 487
+  ypos 636
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression1
+  label "Yxy -> Yu'v'"
+  xpos 453
+  ypos 661
+ }
+push $N1bff9a50
+ Switch {
+  inputs 2
+  which {{GamutGrid1.colorSpace}}
+  name Switch3
+  xpos 347
+  ypos 665
+ }
+push $N2222c410
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 640
+  ypos 571
+ }
+ Multiply {
+  value {1 1 1 1}
+  name Multiply1
+  xpos 640
+  ypos 597
+ }
+push $N2222c410
+ ColorMatrix {
+  matrix {
+      {1.04981102 0 -9.748e-05}
+      {-0.49590302 1.37331305 0.09824004}
+      {0 0 0.99125202}
+    }
+  name ColorMatrix3
+  xpos 507
+  ypos 572
+ }
+ Shuffle {
+  alpha white
+  name Shuffle2
+  label "\[value in]-->\[value out]"
+  note_font "Bitstream Vera Sans"
+  xpos 507
+  ypos 596
+ }
+ Switch {
+  inputs 2
+  which {{parent.colorize}}
+  name Switch1
+  xpos 569
+  ypos 655
+ }
+ BlinkScript {
+  inputs 2
+  recompileCount 2
+  ProgramGroup 1
+  KernelDescription "2 \"plot_cie_xy\" iterate pixelWise fc48d30b761944f4622c7e7cade9c548789bc618dc38d8ca992161542531f81f 3 \"col\" Read Random \"Yxy\" Read Random \"dst\" Write Random 3 \"padding\" Float 1 AAAAAA== \"left_margin\" Float 1 AAAAAA== \"process_input\" Bool 1 AA== 3 \"padding\" 1 1 \"left_margin\" 1 1 \"process_input\" 1 1 2 \"outsize\" Float 1 1 AAAAAA== \"offset\" Float 1 1 AAAAAA=="
+  kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> col;\n  Image<eRead, eAccessRandom, eEdgeClamped> Yxy;\n  Image<eWrite, eAccessRandom> dst;\n\nparam:\n  float padding;\n  float left_margin;\n  bool process_input;\n\n\nlocal:\n  float outsize;\n  float offset;\n\n  void init() \{\n    // calculate output width and height and offset based on padding\n    outsize = dst.bounds.height()/padding;\n    // xy offset for margin on lower left corner\n    offset = dst.bounds.height()*left_margin;\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of the iteration. Essentially a single thread.\n    if ( pos.x > 1 || pos.y > 1) \{ return; \}\n    // Loop over all pixels in input Yxy\n    if (process_input) \{\n      for ( int j = Yxy.bounds.y1; j < Yxy.bounds.y2; j++) \{\n        for ( int i = Yxy.bounds.x1; i < Yxy.bounds.x2; i++) \{\n          // sample Yxy pixel at position i, j\n          float2 xy = float2(Yxy(i, j, 1), Yxy(i, j, 2));\n          // don't process black pixels\n          if( xy.x == 0.0f && xy.y == 0.0f) \{ continue; \}\n          // calculate output position: xy chromaticity coordinates at centered output pixel position\n          float2 out_pos = float2(xy.x * outsize + offset, xy.y * outsize + offset);\n          // Write color value to xy sample position in dst\n          if ( dst.bounds.inside(out_pos.x, out_pos.y)) \{ dst(out_pos.x, out_pos.y) = col(i, j); \}\n        \}\n      \}\n    \}\n  \}\n\};"
+  vectorize false
+  rebuild ""
+  plot_cie_xy_padding 1
+  plot_cie_xy_process_input true
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  specifiedFormat true
+  rebuild_finalise ""
+  name Plot_Input
+  xpos 569
+  ypos 737
+ }
+ Output {
+  name Output1
+  xpos 569
+  ypos 820
+ }
+push $N2222c410
+ Reformat {
+  resize distort
+  name Reformat1
+  xpos 823
+  ypos 451
+ }
+end_group
+push 0
+Group {
+ inputs 0
+ name GenGamut2
+ xpos -1417
+ ypos 845
+ addUserKnob {20 User}
+ addUserKnob {4 gamut M {ACES ACEScg "Rec709 / sRGB" Rec2020 P3 AlexaWideGamut REDColor2 REDColor3 REDColor4 DRAGONcolor DRAGONcolor2 REDWideGamutRGB SGamut SGamut3 SGamut3.Cine ProPhoto "CIE XYZ" "Huge Gamut AP0 x 2" ""}}
+ gamut ACEScg
+ addUserKnob {41 value l color T Multiply4.value}
+ addUserKnob {41 plotColorSpace T Switch3.which}
+}
+ ColorWheel {
+  inputs 0
+  format "256 256 0 0 256 256 1 square_256"
+  centerSaturation 1
+  name ColorWheel4
+  xpos 444
+  ypos -23
+ }
+ Dot {
+  name Dot3
+  xpos 478
+  ypos 96
+ }
+set N20351a90 [stack 0]
+ ColorMatrix {
+  matrix {
+      {{"\[python (0.9525523959, 0.6624541811, 0.4123907993, 0.6369580483, 0.4865709486, 0.6380076193, 0.4581609159, 0.4878301118, 0.4516946649, 0.5070147865, 0.4462154077, 0.7352752459, 0.7064827132, 0.7064827132, 0.5990839208, 0.7976672348, 1.0000000000, 1.48804061)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.1340042065, 0.3575843394, 0.1446169036, 0.2656676932, 0.2147038563, 0.3832048061, 0.3432736678, 0.3178467119, 0.3587783652, 0.3157557129, 0.0686094106, 0.1288010498, 0.1288010498, 0.2489255161, 0.1351922306, 0.0000000000, -0.23423647)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000936786, 0.1561876870, 0.1804807884, 0.1688809752, 0.1982172852, 0.0977444514, 0.1112803526, 0.1215422950, 0.1831046977, 0.0868529229, 0.1906749540, 0.1465712705, 0.1151721641, 0.1151721641, 0.1024464902, 0.0313525290, 0.0000000000, -0.3011580651)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.3439664498, 0.2722287168, 0.2126390059, 0.2627002120, 0.2289745641, 0.2919537790, 0.1694420971, 0.2289038124, 0.2119478695, 0.2207240223, 0.1942557952, 0.2866940995, 0.2709796708, 0.2709796708, 0.2150758201, 0.2880374539, 0.0000000000, 0.2501373809)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.7281660966, 0.6740817658, 0.7151686788, 0.6779980715, 0.6917385218, 0.8238410415, 0.8648282025, 0.7808598244, 0.7230197720, 0.8391880546, 0.7385568692, 0.8429791340, 0.7866064112, 0.7866064112, 0.8850685017, 0.7118768834, 1.0000000000, 1.210452347)\\\[\[numvalue gamut]\\]]\n"} {"\[python (-0.0721325464, 0.0536895174, 0.0721923154, 0.0593017165, 0.0792869141, -0.1157948205, -0.0342702996, -0.0097636368, 0.0650323585, -0.0599120769, 0.0671873356, -0.1296732335, -0.0575860820, -0.0575860820, -0.1001443219, 0.0000856626, 0.0000000000, -0.4605897283)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.0000000000, -0.0055746495, 0.0193308187, 0.0000000000, 0.0000000000, 0.0027982790, -0.1061849690, -0.0210075899, -0.0194509094, -0.0544519405, -0.0479226710, -0.0796808569, -0.0096778454, -0.0096778454, -0.0320658495, 0.0000000000, 0.0000000000, -0.4416591448)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.0040607335, 0.1191947798, 0.0280726930, 0.0451133819, -0.0670342357, 0.0255435258, 0.0178269864, 0.0165064159, -0.0003228254, -0.0002844886, -0.3473432170, 0.0046000375, 0.0046000375, -0.0276583907, 0.0000000000, 0.0000000000, -0.2480497808)\\\[\[numvalue gamut]\\]]\n"} {"\[python (1.0088251844, 1.0103391003, 0.9505321522, 1.0609850577, 1.0439443689, 1.1532937074, 1.0894666276, 1.0120057879, 1.0117696778, 1.0635999502, 1.0570323440, 1.5160818246, 1.0941355587, 1.0941355587, 1.1487819910, 0.8251882845, 1.0000000000, 1.69853411)\\\[\[numvalue gamut]\\]]\n"}}
+    }
+  name ColorMatrix2
+  label "input to XYZ"
+  note_font "Bitstream Vera Sans"
+  selected true
+  xpos 584
+  ypos 174
+  addUserKnob {20 User}
+  addUserKnob {3 gamut}
+  gamut {{parent.gamut}}
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  illuminant_in ACES
+  primary_in ACES
+  colorspace_out CIE-Yxy
+  name Colorspace3
+  xpos 584
+  ypos 210
+ }
+ Dot {
+  name Dot8
+  xpos 618
+  ypos 240
+ }
+set N216488a0 [stack 0]
+ Dot {
+  name Dot9
+  xpos 724
+  ypos 240
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression1
+  label "Yxy -> Yu'v'"
+  xpos 690
+  ypos 265
+ }
+push $N216488a0
+ Switch {
+  inputs 2
+  which {{GamutGrid1.colorSpace}}
+  name Switch3
+  xpos 584
+  ypos 269
+ }
+push $N20351a90
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 444
+  ypos 151
+ }
+ Multiply {
+  value {1 0 0 1}
+  name Multiply4
+  xpos 444
+  ypos 204
+ }
+ BlinkScript {
+  inputs 2
+  recompileCount 2
+  ProgramGroup 1
+  KernelDescription "2 \"plot_cie_xy\" iterate pixelWise fc48d30b761944f4622c7e7cade9c548789bc618dc38d8ca992161542531f81f 3 \"col\" Read Random \"Yxy\" Read Random \"dst\" Write Random 3 \"padding\" Float 1 AAAAAA== \"left_margin\" Float 1 AAAAAA== \"process_input\" Bool 1 AA== 3 \"padding\" 1 1 \"left_margin\" 1 1 \"process_input\" 1 1 2 \"outsize\" Float 1 1 AAAAAA== \"offset\" Float 1 1 AAAAAA=="
+  kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> col;\n  Image<eRead, eAccessRandom, eEdgeClamped> Yxy;\n  Image<eWrite, eAccessRandom> dst;\n\nparam:\n  float padding;\n  float left_margin;\n  bool process_input;\n\n\nlocal:\n  float outsize;\n  float offset;\n\n  void init() \{\n    // calculate output width and height and offset based on padding\n    outsize = dst.bounds.height()/padding;\n    // xy offset for margin on lower left corner\n    offset = dst.bounds.height()*left_margin;\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of the iteration. Essentially a single thread.\n    if ( pos.x > 1 || pos.y > 1) \{ return; \}\n    // Loop over all pixels in input Yxy\n    if (process_input) \{\n      for ( int j = Yxy.bounds.y1; j < Yxy.bounds.y2; j++) \{\n        for ( int i = Yxy.bounds.x1; i < Yxy.bounds.x2; i++) \{\n          // sample Yxy pixel at position i, j\n          float2 xy = float2(Yxy(i, j, 1), Yxy(i, j, 2));\n          // don't process black pixels\n          if( xy.x == 0.0f && xy.y == 0.0f) \{ continue; \}\n          // calculate output position: xy chromaticity coordinates at centered output pixel position\n          float2 out_pos = float2(xy.x * outsize + offset, xy.y * outsize + offset);\n          // Write color value to xy sample position in dst\n          if ( dst.bounds.inside(out_pos.x, out_pos.y)) \{ dst(out_pos.x, out_pos.y) = col(i, j); \}\n        \}\n      \}\n    \}\n  \}\n\};"
+  vectorize false
+  rebuild ""
+  plot_cie_xy_padding 1
+  plot_cie_xy_process_input true
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  specifiedFormat true
+  rebuild_finalise ""
+  name Plot_Input
+  xpos 444
+  ypos 265
+ }
+ Output {
+  name Output1
+  xpos 444
+  ypos 403
+ }
+end_group
+Group {
+ inputs 0
+ name GamutGrid1
+ note_font "Bitstream Vera Sans"
+ xpos -1261
+ ypos 603
+ addUserKnob {20 User}
+ addUserKnob {4 gamut M {ACES ACEScg "Rec709 / sRGB" Rec2020 P3 AlexaWideGamut REDColor2 REDColor3 REDColor4 DRAGONcolor DRAGONcolor2 REDWideGamutRGB SGamut SGamut3 SGamut3.Cine ProPhoto "CIE XYZ" "Huge Gamut AP0 x 2"}}
+ gamut "Huge Gamut AP0 x 2"
+ addUserKnob {3 style}
+ style 1
+ addUserKnob {7 density R 0 100}
+ density 50
+ addUserKnob {12 whitePoint}
+ whitePoint {{"colorSpace ? 0.2007777 : 0.32168"} {"colorSpace ? 0.4742053 : 0.33767"}}
+ addUserKnob {4 colorSpace M {"CIE 1931 xy" "CIE 1976 u'v'" ""}}
+ colorSpace "CIE 1976 u'v'"
+}
+ ColorWheel {
+  inputs 0
+  format "512 512 0 0 512 512 1 square_512"
+  fillFormat false
+  area {40 40 472 472}
+  name ColorWheel1
+  xpos 508
+  ypos -561
+ }
+ Reformat {
+  type scale
+  scale {{max(parent.density/50,0.25)}}
+  resize distort
+  filter Impulse
+  pbb true
+  name Reformat2
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos -489
+ }
+ set C245f4c40 [stack 0]
+ Dot {
+  name Dot1
+  note_font "Bitstream Vera Sans"
+  xpos 542
+  ypos -391
+ }
+ ColorMatrix {
+  matrix {
+      {{"\[python (0.9525523959, 0.6624541811, 0.4123907993, 0.6369580483, 0.4865709486, 0.6380076193, 0.4581609159, 0.4878301118, 0.4516946649, 0.5070147865, 0.4462154077, 0.7352752459, 0.7064827132, 0.7064827132, 0.5990839208, 0.7976672348, 1.0000000000, 1.48804061)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.1340042065, 0.3575843394, 0.1446169036, 0.2656676932, 0.2147038563, 0.3832048061, 0.3432736678, 0.3178467119, 0.3587783652, 0.3157557129, 0.0686094106, 0.1288010498, 0.1288010498, 0.2489255161, 0.1351922306, 0.0000000000, -0.23423647)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000936786, 0.1561876870, 0.1804807884, 0.1688809752, 0.1982172852, 0.0977444514, 0.1112803526, 0.1215422950, 0.1831046977, 0.0868529229, 0.1906749540, 0.1465712705, 0.1151721641, 0.1151721641, 0.1024464902, 0.0313525290, 0.0000000000, -0.3011580651)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.3439664498, 0.2722287168, 0.2126390059, 0.2627002120, 0.2289745641, 0.2919537790, 0.1694420971, 0.2289038124, 0.2119478695, 0.2207240223, 0.1942557952, 0.2866940995, 0.2709796708, 0.2709796708, 0.2150758201, 0.2880374539, 0.0000000000, 0.2501373809)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.7281660966, 0.6740817658, 0.7151686788, 0.6779980715, 0.6917385218, 0.8238410415, 0.8648282025, 0.7808598244, 0.7230197720, 0.8391880546, 0.7385568692, 0.8429791340, 0.7866064112, 0.7866064112, 0.8850685017, 0.7118768834, 1.0000000000, 1.210452347)\\\[\[numvalue gamut]\\]]\n"} {"\[python (-0.0721325464, 0.0536895174, 0.0721923154, 0.0593017165, 0.0792869141, -0.1157948205, -0.0342702996, -0.0097636368, 0.0650323585, -0.0599120769, 0.0671873356, -0.1296732335, -0.0575860820, -0.0575860820, -0.1001443219, 0.0000856626, 0.0000000000, -0.4605897283)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.0000000000, -0.0055746495, 0.0193308187, 0.0000000000, 0.0000000000, 0.0027982790, -0.1061849690, -0.0210075899, -0.0194509094, -0.0544519405, -0.0479226710, -0.0796808569, -0.0096778454, -0.0096778454, -0.0320658495, 0.0000000000, 0.0000000000, -0.4416591448)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.0040607335, 0.1191947798, 0.0280726930, 0.0451133819, -0.0670342357, 0.0255435258, 0.0178269864, 0.0165064159, -0.0003228254, -0.0002844886, -0.3473432170, 0.0046000375, 0.0046000375, -0.0276583907, 0.0000000000, 0.0000000000, -0.2480497808)\\\[\[numvalue gamut]\\]]\n"} {"\[python (1.0088251844, 1.0103391003, 0.9505321522, 1.0609850577, 1.0439443689, 1.1532937074, 1.0894666276, 1.0120057879, 1.0117696778, 1.0635999502, 1.0570323440, 1.5160818246, 1.0941355587, 1.0941355587, 1.1487819910, 0.8251882845, 1.0000000000, 1.69853411)\\\[\[numvalue gamut]\\]]\n"}}
+    }
+  name ColorMatrix17
+  label "working to XYZ"
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos -354
+  addUserKnob {20 User}
+  addUserKnob {3 gamut}
+  gamut {{parent.gamut}}
+ }
+set N245e93b0 [stack 0]
+ Dot {
+  name Dot2
+  note_font "Bitstream Vera Sans"
+  xpos 150
+  ypos -345
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  colorspace_out CIE-Yxy
+  name Colorspace1
+  note_font "Bitstream Vera Sans"
+  xpos 116
+  ypos -320
+ }
+ Dot {
+  name Dot8
+  xpos 150
+  ypos -296
+ }
+set N3e0eee80 [stack 0]
+ Dot {
+  name Dot9
+  xpos 256
+  ypos -296
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression4
+  label "Yxy -> Yu'v'"
+  selected true
+  xpos 222
+  ypos -271
+ }
+push $N3e0eee80
+ Switch {
+  inputs 2
+  which {{parent.colorSpace}}
+  name Switch3
+  xpos 116
+  ypos -267
+ }
+ Expression {
+  expr0 r
+  expr1 "(-(degrees(atan2(g-white.x, b-white.y))-180)+270)%360/360"
+  expr2 "hypot(g-white.x, b-white.y)"
+  expr3 a
+  name Expression3
+  xpos 116
+  ypos -220
+  cached true
+  addUserKnob {20 User}
+  addUserKnob {12 white}
+  white {{parent.whitePoint.x} {parent.whitePoint.y}}
+ }
+set N245b2f70 [stack 0]
+ Posterize {
+  Colors {{rint(parent.density/3*2)}}
+  name Posterize1
+  note_font "Bitstream Vera Sans"
+  xpos 116
+  ypos -179
+ }
+set N245acbf0 [stack 0]
+push $N245b2f70
+ Dot {
+  name Dot15
+  note_font "Bitstream Vera Sans"
+  xpos 217
+  ypos -217
+ }
+ ShuffleCopy {
+  inputs 2
+  blue blue
+  name ShuffleCopy4
+  note_font "Bitstream Vera Sans"
+  xpos 183
+  ypos -128
+ }
+ Transform {
+  translate {{width} 0}
+  center {{width/2} {height/2}}
+  filter Impulse
+  name Transform6
+  note_font "Bitstream Vera Sans"
+  xpos 183
+  ypos -104
+ }
+push $N245acbf0
+push $N245b2f70
+ Dot {
+  name Dot16
+  note_font "Bitstream Vera Sans"
+  xpos 80
+  ypos -217
+ }
+ ShuffleCopy {
+  inputs 2
+  green green
+  name ShuffleCopy3
+  note_font "Bitstream Vera Sans"
+  xpos 46
+  ypos -131
+ }
+ Reformat {
+  type scale
+  scale {2 1}
+  resize none
+  center false
+  filter Impulse
+  name Reformat14
+  note_font "Bitstream Vera Sans"
+  xpos 46
+  ypos -107
+ }
+ Merge2 {
+  inputs 2
+  name Merge20
+  note_font "Bitstream Vera Sans"
+  xpos 109
+  ypos -57
+ }
+ Expression {
+  expr0 r
+  expr1 cos(radians(g*360))*b+white.x
+  expr2 sin(radians(g*360))*b+white.y
+  expr3 a
+  name Expression19
+  xpos 109
+  ypos -33
+  cached true
+  addUserKnob {20 User}
+  addUserKnob {12 white}
+  white {{parent.Expression3.white} {parent.Expression3.white}}
+ }
+ Dot {
+  name Dot12
+  xpos 143
+ }
+set N1c2345b0 [stack 0]
+ Dot {
+  name Dot13
+  xpos 249
+ }
+ Expression {
+  expr0 r
+  expr1 (9*g)/(6*g-16*b+12)
+  expr2 (4*b)/(6*g-16*b+12)
+  name Expression7
+  label "Yu'v' -> Yxy"
+  xpos 215
+  ypos 25
+ }
+push $N1c2345b0
+ Switch {
+  inputs 2
+  which {{parent.colorSpace}}
+  name Switch5
+  xpos 109
+  ypos 29
+ }
+ Colorspace {
+  colorspace_in CIE-Yxy
+  colorspace_out CIE-XYZ
+  name Colorspace2
+  note_font "Bitstream Vera Sans"
+  xpos 109
+  ypos 53
+ }
+ ColorMatrix {
+  matrix {
+      {{"\[python (0.9525523959, 0.6624541811, 0.4123907993, 0.6369580483, 0.4865709486, 0.6380076193, 0.4581609159, 0.4878301118, 0.4516946649, 0.5070147865, 0.4462154077, 0.7352752459, 0.7064827132, 0.7064827132, 0.5990839208, 0.7976672348, 1.0000000000, 1.48804061)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.1340042065, 0.3575843394, 0.1446169036, 0.2656676932, 0.2147038563, 0.3832048061, 0.3432736678, 0.3178467119, 0.3587783652, 0.3157557129, 0.0686094106, 0.1288010498, 0.1288010498, 0.2489255161, 0.1351922306, 0.0000000000, -0.23423647)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000936786, 0.1561876870, 0.1804807884, 0.1688809752, 0.1982172852, 0.0977444514, 0.1112803526, 0.1215422950, 0.1831046977, 0.0868529229, 0.1906749540, 0.1465712705, 0.1151721641, 0.1151721641, 0.1024464902, 0.0313525290, 0.0000000000, -0.3011580651)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.3439664498, 0.2722287168, 0.2126390059, 0.2627002120, 0.2289745641, 0.2919537790, 0.1694420971, 0.2289038124, 0.2119478695, 0.2207240223, 0.1942557952, 0.2866940995, 0.2709796708, 0.2709796708, 0.2150758201, 0.2880374539, 0.0000000000, 0.2501373809)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.7281660966, 0.6740817658, 0.7151686788, 0.6779980715, 0.6917385218, 0.8238410415, 0.8648282025, 0.7808598244, 0.7230197720, 0.8391880546, 0.7385568692, 0.8429791340, 0.7866064112, 0.7866064112, 0.8850685017, 0.7118768834, 1.0000000000, 1.210452347)\\\[\[numvalue gamut]\\]]\n"} {"\[python (-0.0721325464, 0.0536895174, 0.0721923154, 0.0593017165, 0.0792869141, -0.1157948205, -0.0342702996, -0.0097636368, 0.0650323585, -0.0599120769, 0.0671873356, -0.1296732335, -0.0575860820, -0.0575860820, -0.1001443219, 0.0000856626, 0.0000000000, -0.4605897283)\\\[\[numvalue gamut]\\]]\n"}}
+      {{"\[python (0.0000000000, -0.0055746495, 0.0193308187, 0.0000000000, 0.0000000000, 0.0027982790, -0.1061849690, -0.0210075899, -0.0194509094, -0.0544519405, -0.0479226710, -0.0796808569, -0.0096778454, -0.0096778454, -0.0320658495, 0.0000000000, 0.0000000000, -0.4416591448)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.0040607335, 0.1191947798, 0.0280726930, 0.0451133819, -0.0670342357, 0.0255435258, 0.0178269864, 0.0165064159, -0.0003228254, -0.0002844886, -0.3473432170, 0.0046000375, 0.0046000375, -0.0276583907, 0.0000000000, 0.0000000000, -0.2480497808)\\\[\[numvalue gamut]\\]]\n"} {"\[python (1.0088251844, 1.0103391003, 0.9505321522, 1.0609850577, 1.0439443689, 1.1532937074, 1.0894666276, 1.0120057879, 1.0117696778, 1.0635999502, 1.0570323440, 1.5160818246, 1.0941355587, 1.0941355587, 1.1487819910, 0.8251882845, 1.0000000000, 1.69853411)\\\[\[numvalue gamut]\\]]\n"}}
+    }
+  invert true
+  name ColorMatrix3
+  label "XYZ to working"
+  note_font "Bitstream Vera Sans"
+  xpos 109
+  ypos 77
+  addUserKnob {20 User}
+  addUserKnob {3 gamut}
+  gamut {{parent.gamut}}
+ }
+ Clamp {
+  channels rgb
+  maximum_enable false
+  name Clamp2
+  xpos 109
+  ypos 113
+ }
+ Clamp {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  minimum 1
+  MinClampTo_enable true
+  MaxClampTo_enable true
+  name Clamp1
+  note_font "Bitstream Vera Sans"
+  xpos 109
+  ypos 158
+ }
+ Premult {
+  name Premult2
+  note_font "Bitstream Vera Sans"
+  xpos 109
+  ypos 194
+ }
+ ColorWheel {
+  inputs 0
+  format "512 512 0 0 512 512 1 square_512"
+  centerSaturation 1
+  fillFormat false
+  area {-256 -256 768 768}
+  name ColorWheel4
+  xpos 311
+  ypos 30
+ }
+ Crop {
+  box {0 0 512 512}
+  reformat true
+  name Crop2
+  note_font "Bitstream Vera Sans"
+  xpos 311
+  ypos 112
+ }
+set N1c25a790 [stack 0]
+ Transform {
+  translate {{width} 0}
+  center {256 256}
+  name Transform1
+  note_font "Bitstream Vera Sans"
+  xpos 367
+  ypos 156
+ }
+push $N1c25a790
+ Reformat {
+  type scale
+  scale {2 1}
+  resize none
+  center false
+  filter Impulse
+  name Reformat1
+  note_font "Bitstream Vera Sans"
+  xpos 262
+  ypos 153
+ }
+ Merge2 {
+  inputs 2
+  name Merge2
+  note_font "Bitstream Vera Sans"
+  xpos 305
+  ypos 194
+ }
+clone $C245f4c40 {
+  xpos 305
+  ypos 218
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  bbox B
+  name Merge1
+  note_font "Bitstream Vera Sans"
+  xpos 109
+  ypos 218
+ }
+ Dot {
+  name Dot3
+  note_font "Bitstream Vera Sans"
+  xpos 143
+  ypos 250
+ }
+push $N245e93b0
+ Colorspace {
+  colorspace_in CIE-XYZ
+  primary_in AlexaV3LogC
+  colorspace_out CIE-Yxy
+  name Colorspace3
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos -240
+ }
+ Dot {
+  name Dot5
+  xpos 542
+  ypos -205
+ }
+set N1c28f4b0 [stack 0]
+ Dot {
+  name Dot6
+  xpos 648
+  ypos -205
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression5
+  label "Yxy -> Yu'v'"
+  xpos 614
+  ypos -180
+ }
+push $N1c28f4b0
+ Switch {
+  inputs 2
+  which {{parent.colorSpace}}
+  name Switch2
+  xpos 508
+  ypos -176
+ }
+ Dot {
+  name Dot7
+  xpos 542
+  ypos -152
+ }
+set N1c29f530 [stack 0]
+ Expression {
+  expr0 rint(r*Colors)/Colors
+  expr1 rint(g*Colors)/Colors
+  expr2 rint(b*Colors)/Colors
+  name Expression1
+  note_font "Bitstream Vera Sans"
+  xpos 736
+  ypos -155
+  addUserKnob {20 User}
+  addUserKnob {7 Colors R 1 256}
+  Colors {{parent.density}}
+ }
+ Expression {
+  expr0 "r == 0 ? 0.0001 : r"
+  expr1 "g == 0 ? 0.0001 : g"
+  expr2 "b == 0 ? 0.0001 : b"
+  name Expression2
+  note_font "Bitstream Vera Sans"
+  xpos 736
+  ypos -131
+ }
+ Dot {
+  name Dot4
+  note_font "Bitstream Vera Sans"
+  xpos 770
+  ypos -107
+ }
+push $N1c29f530
+ ShuffleCopy {
+  inputs 2
+  green green
+  blue blue
+  alpha alpha2
+  name ShuffleCopy5
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos -110
+ }
+ Dot {
+  name Dot10
+  xpos 542
+  ypos -86
+ }
+set N1c2babe0 [stack 0]
+ Dot {
+  name Dot11
+  xpos 648
+  ypos -86
+ }
+ Expression {
+  expr0 r
+  expr1 (9*g)/(6*g-16*b+12)
+  expr2 (4*b)/(6*g-16*b+12)
+  name Expression6
+  label "Yu'v' -> Yxy"
+  xpos 614
+  ypos -61
+ }
+push $N1c2babe0
+ Switch {
+  inputs 2
+  which {{parent.colorSpace}}
+  name Switch4
+  xpos 508
+  ypos -57
+ }
+ Colorspace {
+  colorspace_in CIE-Yxy
+  colorspace_out CIE-XYZ
+  primary_out AlexaV3LogC
+  name Colorspace6
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos -20
+ }
+ ColorMatrix {
+  matrix {
+      {{parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix}}
+      {{parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix}}
+      {{parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix}}
+    }
+  invert true
+  name ColorMatrix1
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 4
+ }
+ Crop {
+  box {0 0 {width} {height}}
+  reformat true
+  name Crop1
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 28
+ }
+ Clamp {
+  channels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+  minimum 1
+  MinClampTo_enable true
+  MaxClampTo_enable true
+  name Clamp4
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 52
+ }
+ Premult {
+  name Premult1
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 88
+ }
+push $N1c25a790
+clone $C245f4c40 {
+  xpos 404
+  ypos 112
+  selected false
+ }
+ Merge2 {
+  inputs 2
+  name Merge3
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 112
+ }
+ Clamp {
+  maximum_enable false
+  name Clamp3
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 136
+ }
+ Switch {
+  inputs 2
+  which {{parent.style}}
+  name Switch1
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 247
+ }
+ Shuffle {
+  alpha white
+  name Shuffle1
+  label "\[value in]-->\[value out]"
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 271
+ }
+ ColorMatrix {
+  matrix {
+      {{parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix}}
+      {{parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix}}
+      {{parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix} {parent.ColorMatrix17.matrix}}
+    }
+  name ColorMatrix2
+  note_font "Bitstream Vera Sans"
+  xpos 508
+  ypos 319
+ }
+ Output {
+  name Output1
+  xpos 508
+  ypos 394
+ }
+end_group
+ColorMatrix {
+ matrix {
+     {{"\[python (0.9525523959, 0.6624541811, 0.4123907993, 0.6369580483, 0.4865709486, 0.6380076193, 0.4581609159, 0.4878301118, 0.4516946649, 0.5070147865, 0.4462154077, 0.7352752459, 0.7064827132, 0.7064827132, 0.5990839208, 0.7976672348, 1.0000000000, 1.48804061)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.1340042065, 0.3575843394, 0.1446169036, 0.2656676932, 0.2147038563, 0.3832048061, 0.3432736678, 0.3178467119, 0.3587783652, 0.3157557129, 0.0686094106, 0.1288010498, 0.1288010498, 0.2489255161, 0.1351922306, 0.0000000000, -0.23423647)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000936786, 0.1561876870, 0.1804807884, 0.1688809752, 0.1982172852, 0.0977444514, 0.1112803526, 0.1215422950, 0.1831046977, 0.0868529229, 0.1906749540, 0.1465712705, 0.1151721641, 0.1151721641, 0.1024464902, 0.0313525290, 0.0000000000, -0.3011580651)\\\[\[numvalue gamut]\\]]\n"}}
+     {{"\[python (0.3439664498, 0.2722287168, 0.2126390059, 0.2627002120, 0.2289745641, 0.2919537790, 0.1694420971, 0.2289038124, 0.2119478695, 0.2207240223, 0.1942557952, 0.2866940995, 0.2709796708, 0.2709796708, 0.2150758201, 0.2880374539, 0.0000000000, 0.2501373809)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.7281660966, 0.6740817658, 0.7151686788, 0.6779980715, 0.6917385218, 0.8238410415, 0.8648282025, 0.7808598244, 0.7230197720, 0.8391880546, 0.7385568692, 0.8429791340, 0.7866064112, 0.7866064112, 0.8850685017, 0.7118768834, 1.0000000000, 1.210452347)\\\[\[numvalue gamut]\\]]\n"} {"\[python (-0.0721325464, 0.0536895174, 0.0721923154, 0.0593017165, 0.0792869141, -0.1157948205, -0.0342702996, -0.0097636368, 0.0650323585, -0.0599120769, 0.0671873356, -0.1296732335, -0.0575860820, -0.0575860820, -0.1001443219, 0.0000856626, 0.0000000000, -0.4605897283)\\\[\[numvalue gamut]\\]]\n"}}
+     {{"\[python (0.0000000000, -0.0055746495, 0.0193308187, 0.0000000000, 0.0000000000, 0.0027982790, -0.1061849690, -0.0210075899, -0.0194509094, -0.0544519405, -0.0479226710, -0.0796808569, -0.0096778454, -0.0096778454, -0.0320658495, 0.0000000000, 0.0000000000, -0.4416591448)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.0040607335, 0.1191947798, 0.0280726930, 0.0451133819, -0.0670342357, 0.0255435258, 0.0178269864, 0.0165064159, -0.0003228254, -0.0002844886, -0.3473432170, 0.0046000375, 0.0046000375, -0.0276583907, 0.0000000000, 0.0000000000, -0.2480497808)\\\[\[numvalue gamut]\\]]\n"} {"\[python (1.0088251844, 1.0103391003, 0.9505321522, 1.0609850577, 1.0439443689, 1.1532937074, 1.0894666276, 1.0120057879, 1.0117696778, 1.0635999502, 1.0570323440, 1.5160818246, 1.0941355587, 1.0941355587, 1.1487819910, 0.8251882845, 1.0000000000, 1.69853411)\\\[\[numvalue gamut]\\]]\n"}}
+   }
+ invert true
+ name ColorMatrix1
+ label "XYZ to ACEScg"
+ note_font "Bitstream Vera Sans"
+ xpos -1261
+ ypos 641
+ addUserKnob {20 User}
+ addUserKnob {4 gamut M {ACES ACEScg "Rec709 / sRGB" Rec2020 P3 AlexaWideGamut REDColor2 REDColor3 REDColor4 DRAGONcolor DRAGONcolor2 REDWideGamutRGB SGamut SGamut3 SGamut3.Cine ProPhoto "CIE XYZ" "Huge Gamut AP0 x 2" ""}}
+ gamut ACEScg
+}
+set N6595a660 [stack 0]
+Group {
+ name GamutCompress_blink
+ label "\[value method] : \[value direction]"
+ xpos -1144
+ ypos 683
+ addUserKnob {20 GamutCompress}
+ addUserKnob {4 method t "Choose the type of distance compression function you want to use" M {log reinhard power exp atan tanh ""}}
+ method power
+ addUserKnob {6 use_gpu l "use gpu" t "use gpu for blinkscript node" -STARTLINE}
+ use_gpu true
+ addUserKnob {18 threshold t "Percentage of the outer gamut boundary to affect. A value of 0.2 means 20% of the outer gamut will be utilized for gamut compression." R 0 0.6}
+ threshold 0.2
+ addUserKnob {6 threshold_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 threshold_panelDropped_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {6 threshold_panelDropped_1_1 l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {7 power t "Adjust the aggressiveness of the curve when method is set to power. 1 is equal to reinhard. higher values bias compressed values closer to the gamut boundary." R 1 2}
+ power 2
+ addUserKnob {7 shd_rolloff l "shd rolloff" t "Shadow rolloff reduces the gamut compression effect below the specified pixel value. This reduces invertability issues with negative pixels in shadow grain." R 0 0.1}
+ shd_rolloff 0.03
+ addUserKnob {26 distance_limit_label l " " t "Specifies the distance beyond the gamut boundary to map to the gamut boundary for each color component." T "<b>distance limit"}
+ addUserKnob {7 cyan t "Maximum distance beyond the green-blue gamut boundary to compress to the gamut boundary." R 0.001 1}
+ cyan 0.5
+ addUserKnob {7 magenta t "Maximum distance beyond the blue-red gamut boundary to compress to the gamut boundary." R 0.001 1}
+ magenta 0.5
+ addUserKnob {7 yellow t "Maximum distance beyond the red-green gamut boundary to compress to the gamut boundary." R 0.001 1}
+ yellow 0.5
+ addUserKnob {6 hexagonal t "Compress secondary colors in addition to primary colors. Uses variation on the algorithm suggested by Nick Shaw https://community.acescentral.com/t/a-variation-on-jeds-rgb-gamut-mapper/3060" +STARTLINE}
+ addUserKnob {22 reset t "Reset knobs to default values. Distance limits are calculated based on an the average of a selection of digital cinema cameras." T "n = nuke.thisNode()\nnuke.root().begin()\ndefaults = \{\n    'threshold': 0.2,\n    'power': 1.2,\n    'shd_rolloff': 0.03,\n    'cyan': 0.09,\n    'magenta':0.24,\n    'yellow': 0.12,\n\}\nfor k, v in defaults.items():\n    n\[k].setValue(v)" +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {4 direction M {forward inverse}}
+ addUserKnob {20 info_tab l Info}
+ addUserKnob {26 info_label l " " T "<style> a:link \{ color: #ccc \}</style>\n<font color=#ccc>\n<b>GamutCompress</b><br>\nmaps out of gamut colors back into gamut.\n<br><br><a href=https://github.com/jedypod/gamut-compress>Documentation</a>"}
+ addUserKnob {26 about_label l " " T "<style> a:link \{ color: #ccc \}</style>\n<font color=#ccc><br>\n<b>About</b><br>\nWritten by <a href=https://github.com/jedypod color=red>Jed Smith</a> <br> with <a href=https://community.acescentral.com/t/rgb-saturation-gamut-mapping-approach-and-a-comp-vfx-perspective>help</a> from the <a href=https://community.acescentral.com/c/aces-development-acesnext/vwg-aces-gamut-mapping-working-group>ACES Gamut Mapping VWG</a>"}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos -40
+  ypos -10
+ }
+ AddChannels {
+  name AddChannels
+  xpos -40
+  ypos 32
+ }
+ BlinkScript {
+  recompileCount 1
+  KernelDescription "2 \"GamutCompression\" iterate pixelWise edd180ed9f5fe9b9bcc74bfae347734b03f2ae62d167260dafbfa00b25a329b1 2 \"src\" Read Point \"dst\" Write Point 9 \"threshold\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"p\" Float 1 AAAAAA== \"shd_rolloff\" Float 1 AAAAAA== \"cyan\" Float 1 AAAAAA== \"magenta\" Float 1 AAAAAA== \"yellow\" Float 1 AAAAAA== \"method\" Int 1 AAAAAA== \"hexagonal\" Bool 1 AA== \"invert\" Bool 1 AA== 9 \"threshold\" 3 1 \"p\" 1 1 \"shd_rolloff\" 1 1 \"cyan\" 1 1 \"magenta\" 1 1 \"yellow\" 1 1 \"method\" 1 1 \"hexagonal\" 1 1 \"invert\" 1 1 3 \"thr\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"lim\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"pi\" Float 1 1 AAAAAA=="
+  kernelSource "kernel GamutCompression : public ImageComputationKernel<ePixelWise> \{\n  Image<eRead, eAccessPoint, eEdgeClamped> src;\n  Image<eWrite> dst;\n\n  param:\n    float3 threshold;\n    float p;\n    float shd_rolloff;\n    float cyan;\n    float magenta;\n    float yellow;\n    int method;\n    bool hexagonal;\n    bool invert;\n\n  local:\n  float3 thr;\n  float3 lim;\n  float pi;\n\n  void init() \{\n    pi = 3.14159265359;\n\n    // thr is the percentage of the core gamut to protect: the complement of threshold.\n    thr = float3(1.0f-threshold.x, 1.0f-threshold.y, 1.0f-threshold.z);\n\n    // lim is the max distance from the gamut boundary that will be compressed\n    // 0 is a no-op, 1 will compress colors from a distance of 2.0 from achromatic to the gamut boundary\n    // if method is Reinhard or Power, use the limit as-is\n    if (method == 1 || method == 2) \{\n      lim = float3(cyan+1.0f, magenta+1.0f, yellow+1.0f);\n    \} else \{\n      // otherwise, we have to bruteforce the value of limit \n      // such that lim is the value of x where y=1.0f\n      // importantly, this runs once at the beginning of evaluation, NOT per-pixel!!!\n      lim = float3(\n        bisect(max(0.0001f, cyan)+1.0f, thr.x),\n        bisect(max(0.0001f, magenta)+1.0f, thr.y),\n        bisect(max(0.0001f, yellow)+1.0f, thr.z));\n    \}\n  \}\n\n  // calculate hyperbolic tangent\n  float tanh( float in) \{\n    float f = exp(2.0f*in);\n    return (f-1.0f) / (f+1.0f);\n  \}\n\n  // calculate inverse hyperbolic tangent\n  float atanh( float in) \{\n    return log((1.0f+in)/(1.0f-in))/2.0f;\n  \}\n\n  // compression function which gives the y=1 x intersect at y=0\n  float f(float x, float k, float t) \{\n    if (method == 0) \{\n      // natural logarithm compression method\n      return (exp((1.0f-t+t*log(1.0f-x)-x*t*log(1.0f-x))/(t*(1.0f-x))))*t+x*t-k;\n    \} else if (method == 1 || method == 2) \{\n      return k;\n    \} else if (method == 3) \{ \n      // natural exponent compression method\n      return -log((-x+1.0f)/(t-x))*(-t+x)+t-k;\n    \} else if (method == 4) \{\n      // arctangent compression method\n      return (2*tan( (pi*(1.0f-t))/(2.0f*(x-t)))*(x-t))/pi+t-k;\n    \} else if (method == 5) \{\n      // hyperbolic tangent compression method\n      return atanh((1.0f-t)/(x-t))*(x-t)+t-k;\n    \}\n  \}\n\n  int _sign(float x) \{\n    return x == 0.0f ? 0.0f : x > 0.0f ? 1.0f : 0.0f;\n  \}\n\n  float bisect(float k, float t) \{\n    // use a simple bisection algorithm to bruteforce the root of f\n    // returns an approximation of the value of limit \n    // such that the compression function intersects y=1 at desired value k\n    // this allows us to specify the max distance we will compress to the gamut boundary\n    \n    float a, b, c, y;\n    float tol = 0.0001f; // accuracy of estimate\n    int nmax = 100; // max iterations\n\n    // set up reasonable initial guesses for each method given output ranges of each function\n    if (method == 0) \{\n      // natural logarithm needs a limit between -inf (linear), and 1 (clip)\n      a = -15.0f;\n      b = 0.98f;\n    \} else if (method == 5) \{\n      // tanh needs more precision\n      a = 1.000001f;\n      b = 5.0f;\n    \} else \{\n      a = 1.0001f;\n      b = 5.0f;\n    \}\n\n    if (_sign(f(a, k, t)) == _sign(f(b, k, t))) \{\n      // bad estimate. return something close to linear\n      if ((method == 0) || (method == 2)) \{\n        return -100.0f;\n      \} else \{\n        return 1.999999f;\n      \}\n    \}\n    c = (a+b)/2.0f;\n    y = f(c, k, t);\n    if (fabs(y) <= tol) \{\n      return c; // lucky guess\n    \}\n\n    int n = 1;\n    while ((fabs(y) > tol) && (n <= nmax)) \{\n      if (_sign(y) == _sign(f(a, k, t))) \{\n        a = c;\n      \} else \{\n        b = c;\n      \}\n      c = (a+b)/2.0f;\n      y = f(c, k, t);\n      n += 1;\n    \}\n    return c;\n  \}\n\n\n  // calculate compressed distance\n  float compress(float x, float l, float t) \{\n    float cx, s;\n    if (x < t) \{\n      cx = x;\n    \} else \{\n      if (method == 0) \{\n        // natural logarithm compression method: https://www.desmos.com/calculator/hmzirlw7tj\n        // inspired by ITU-R BT.2446 http://www.itu.int/pub/R-REP-BT.2446-2019\n        if (invert == 0) \{\n          cx = t*log(x/t-l)-l*t*log(x/t-l)+t-t*log(1.0f-l)+l*t*log(1.0f-l);\n        \} else \{\n          cx = exp((x-t+t*log(1.0f-l)-l*t*log(1.0f-l))/(t*(1.0f-l)))*t+l*t;\n        \}\n      \} else if (method == 1) \{\n        // simple Reinhard type compression method: https://www.desmos.com/calculator/lkhdtjbodx\n        if (invert == 0) \{\n          cx = t+1.0f/(1.0f/(x-t)+1.0f/(1.0f-t)-1.0f/(l-t));\n        \} else \{\n          cx = t+1.0f/(1.0f/(x-t)-1.0f/(1.0f-t)+1.0f/(l-t));\n        \}\n      \} else if (method == 2) \{\n        // power(p) compression function plot https://www.desmos.com/calculator/54aytu7hek\n        if (l < 1.0001) \{\n          return x; // disable compression, avoid nan\n        \}\n        s = (l-t)/pow(pow((1.0f-t)/(l-t),-p)-1.0f,1.0f/p); // calc y=1 intersect\n        if (invert == 0) \{\n          cx = t+s*((x-t)/s)/(pow(1.0f+pow((x-t)/s,p),1.0f/p)); // compress\n        \} else \{\n          if (x > (t + s)) \{\n            cx = x; // avoid singularity\n          \}\n          cx = t+s*pow(-(pow((x-t)/s,p)/(pow((x-t)/s,p)-1.0f)),1.0f/p); // uncompress\n        \}\n      \} else if (method == 3) \{\n        // natural exponent compression method: https://www.desmos.com/calculator/s2adnicmmr\n        if (invert == 0) \{\n          cx = l-(l-t)*exp(-(((x-t)*((1.0f*l)/(l-t))/l)));\n        \} else \{\n          cx = -log((x-l)/(t-l))*(-t+l)/1.0f+t;\n        \}\n      \} else if (method == 4) \{\n        // arctangent compression method: https://www.desmos.com/calculator/h96qmnozpo\n        if (invert == 0) \{\n          cx = t+(l-t)*2/pi*atan(pi/2*(x-t)/(l-t));\n        \} else \{\n          cx = t+(l-t)*2/pi*tan(pi/2*(x-t)/(l-t));\n        \}\n      \} else if (method == 5) \{\n        // hyperbolic tangent compression method: https://www.desmos.com/calculator/xiwliws24x\n        if (invert == 0) \{\n          cx = t+(l-t)*tanh(((x-t)/(l-t)));\n        \} else \{\n          cx = t+(l-t)*atanh(x/(l-t)-t/(l-t));\n        \}\n      \}\n    \}\n    return cx;\n  \}\n\n\n  void process() \{\n    // source pixels\n    SampleType(src) rgba = src();\n    float3 rgb = float3(rgba.x, rgba.y, rgba.z);\n\n    // achromatic axis \n    float ach = max(rgb.x, max(rgb.y, rgb.z));\n\n    // achromatic with shadow rolloff below shd_rolloff threshold\n    float ach_shd = 1.0f-( (1.0f-ach)<(1.0f-shd_rolloff)?(1.0f-ach):(1.0f-shd_rolloff)+shd_rolloff*tanh((((1.0f-ach)-(1.0f-shd_rolloff))/shd_rolloff)));\n\n    // distance from the achromatic axis for each color component aka inverse rgb ratios\n    // distance is normalized by achromatic, so that 1.0f is at gamut boundary, avoid 0 div\n    float3 dist = ach_shd == 0 ? float3(0.0f, 0.0f, 0.0f) : (ach-rgb)/ach_shd;\n\n    // compress distance with user controlled parameterized shaper function\n    float sat;\n    float3 csat, cdist;\n    if (hexagonal) \{\n      sat = max(dist.x, max(dist.y, dist.z));\n      csat = float3(\n        compress(sat, lim.x, thr.x),\n        compress(sat, lim.y, thr.y),\n        compress(sat, lim.z, thr.z));\n      cdist = sat == 0 ? dist : float3(\n        dist.x * csat.x / sat,\n        dist.y * csat.y / sat,\n        dist.z * csat.z / sat);\n    \} else \{\n      cdist = float3(\n        compress(dist.x, lim.x, thr.x),\n        compress(dist.y, lim.y, thr.y),\n        compress(dist.z, lim.z, thr.z));\n    \}\n\n    // recalculate rgb from compressed distance and achromatic\n    // effectively this scales each color component relative to achromatic axis by the compressed distance\n    float3 crgb = ach-cdist*ach_shd;\n\n    // write to output\n    dst() = float4(crgb.x, crgb.y, crgb.z, rgba.w);\n  \}\n\};"
+  useGPUIfAvailable {{parent.use_gpu}}
+  rebuild ""
+  GamutCompression_threshold {{parent.threshold} {parent.threshold} {parent.threshold}}
+  GamutCompression_p {{parent.power}}
+  GamutCompression_shd_rolloff {{parent.shd_rolloff}}
+  GamutCompression_cyan {{parent.cyan}}
+  GamutCompression_magenta {{parent.magenta}}
+  GamutCompression_yellow {{parent.yellow}}
+  GamutCompression_method {{parent.method}}
+  GamutCompression_hexagonal {{parent.hexagonal}}
+  GamutCompression_invert {{parent.direction}}
+  rebuild_finalise ""
+  name GamutCompress
+  xpos -40
+  ypos 80
+ }
+ Output {
+  name Output
+  xpos -40
+  ypos 134
+ }
+end_group
+push $N6595a660
+Merge2 {
+ inputs 2
+ operation copy
+ name Merge1
+ label "Dissolve between\nunmapped and mapped"
+ xpos -1261
+ ypos 717
+}
+ColorMatrix {
+ matrix {
+     {{"\[python (0.9525523959, 0.6624541811, 0.4123907993, 0.6369580483, 0.4865709486, 0.6380076193, 0.4581609159, 0.4878301118, 0.4516946649, 0.5070147865, 0.4462154077, 0.7352752459, 0.7064827132, 0.7064827132, 0.5990839208, 0.7976672348, 1.0000000000, 1.48804061)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.1340042065, 0.3575843394, 0.1446169036, 0.2656676932, 0.2147038563, 0.3832048061, 0.3432736678, 0.3178467119, 0.3587783652, 0.3157557129, 0.0686094106, 0.1288010498, 0.1288010498, 0.2489255161, 0.1351922306, 0.0000000000, -0.23423647)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000936786, 0.1561876870, 0.1804807884, 0.1688809752, 0.1982172852, 0.0977444514, 0.1112803526, 0.1215422950, 0.1831046977, 0.0868529229, 0.1906749540, 0.1465712705, 0.1151721641, 0.1151721641, 0.1024464902, 0.0313525290, 0.0000000000, -0.3011580651)\\\[\[numvalue gamut]\\]]\n"}}
+     {{"\[python (0.3439664498, 0.2722287168, 0.2126390059, 0.2627002120, 0.2289745641, 0.2919537790, 0.1694420971, 0.2289038124, 0.2119478695, 0.2207240223, 0.1942557952, 0.2866940995, 0.2709796708, 0.2709796708, 0.2150758201, 0.2880374539, 0.0000000000, 0.2501373809)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.7281660966, 0.6740817658, 0.7151686788, 0.6779980715, 0.6917385218, 0.8238410415, 0.8648282025, 0.7808598244, 0.7230197720, 0.8391880546, 0.7385568692, 0.8429791340, 0.7866064112, 0.7866064112, 0.8850685017, 0.7118768834, 1.0000000000, 1.210452347)\\\[\[numvalue gamut]\\]]\n"} {"\[python (-0.0721325464, 0.0536895174, 0.0721923154, 0.0593017165, 0.0792869141, -0.1157948205, -0.0342702996, -0.0097636368, 0.0650323585, -0.0599120769, 0.0671873356, -0.1296732335, -0.0575860820, -0.0575860820, -0.1001443219, 0.0000856626, 0.0000000000, -0.4605897283)\\\[\[numvalue gamut]\\]]\n"}}
+     {{"\[python (0.0000000000, -0.0055746495, 0.0193308187, 0.0000000000, 0.0000000000, 0.0027982790, -0.1061849690, -0.0210075899, -0.0194509094, -0.0544519405, -0.0479226710, -0.0796808569, -0.0096778454, -0.0096778454, -0.0320658495, 0.0000000000, 0.0000000000, -0.4416591448)\\\[\[numvalue gamut]\\]]\n"} {"\[python (0.0000000000, 0.0040607335, 0.1191947798, 0.0280726930, 0.0451133819, -0.0670342357, 0.0255435258, 0.0178269864, 0.0165064159, -0.0003228254, -0.0002844886, -0.3473432170, 0.0046000375, 0.0046000375, -0.0276583907, 0.0000000000, 0.0000000000, -0.2480497808)\\\[\[numvalue gamut]\\]]\n"} {"\[python (1.0088251844, 1.0103391003, 0.9505321522, 1.0609850577, 1.0439443689, 1.1532937074, 1.0894666276, 1.0120057879, 1.0117696778, 1.0635999502, 1.0570323440, 1.5160818246, 1.0941355587, 1.0941355587, 1.1487819910, 0.8251882845, 1.0000000000, 1.69853411)\\\[\[numvalue gamut]\\]]\n"}}
+   }
+ name ColorMatrix2
+ label "ACEScg to XYZ"
+ note_font "Bitstream Vera Sans"
+ xpos -1261
+ ypos 779
+ addUserKnob {20 User}
+ addUserKnob {4 gamut M {ACES ACEScg "Rec709 / sRGB" Rec2020 P3 AlexaWideGamut REDColor2 REDColor3 REDColor4 DRAGONcolor DRAGONcolor2 REDWideGamutRGB SGamut SGamut3 SGamut3.Cine ProPhoto "CIE XYZ" "Huge Gamut AP0 x 2" ""}}
+ gamut ACEScg
+}
+set N65a131f0 [stack 0]
+Colorspace {
+ colorspace_in CIE-XYZ
+ colorspace_out sRGB
+ name Colorspace3
+ xpos -1146
+ ypos 816
+}
+push $N65a131f0
+Group {
+ inputs 2
+ name PlotGamut2
+ xpos -1261
+ ypos 841
+ addUserKnob {20 User}
+ addUserKnob {6 colorize +STARTLINE}
+ colorize true
+ addUserKnob {4 gamut M {"Adobe (1998)" Apple "Best RGB" "Beta RGB" "Bruce RGB" "CIE (1931)" ColorMatch DCI-P3 "Don RGB 4" "ECI RGB" "Ekta Space PS5" "NTSC (1953)" PAL/SECAM ProPhoto SMPTE-C sRGB "Wide Gamut" AlexaV3LogC "Sony S-Gamut" ACES Rec.2020 ACEScg "CIE XYZ"}}
+ gamut "CIE XYZ"
+ addUserKnob {41 value l color T Multiply4.value}
+ addUserKnob {41 plotColorSpace T Switch3.which}
+}
+ Input {
+  inputs 0
+  name Input1
+  xpos 444
+  ypos 16
+ }
+ Dot {
+  name Dot3
+  xpos 478
+  ypos 82
+ }
+set N65a21dc0 [stack 0]
+ Dot {
+  name Dot2
+  xpos 723
+  ypos 82
+ }
+set N65a24230 [stack 0]
+ Colorspace {
+  colorspace_in CIE-XYZ
+  primary_in ACES
+  colorspace_out CIE-Yxy
+  name Colorspace2
+  xpos 787
+  ypos 166
+ }
+push $N65a24230
+ ColorMatrix {
+  matrix {
+      {0.6624541811 0.1340042065 0.156187687}
+      {0.2722287168 0.6740817658 0.0536895174}
+      {-0.0055746495 0.0040607335 1.0103391}
+    }
+  name ColorMatrix1
+  label "ACEScg -> XYZ (none)"
+  xpos 689
+  ypos 152
+ }
+ Colorspace {
+  colorspace_in CIE-XYZ
+  illuminant_in ACES
+  primary_in ACES
+  colorspace_out CIE-Yxy
+  name Colorspace1
+  xpos 689
+  ypos 184
+ }
+push $N65a24230
+ Colorspace {
+  primary_in {{parent.gamut}}
+  colorspace_out CIE-Yxy
+  primary_out "CIE (1931)"
+  name Colorspace14
+  xpos 579
+  ypos 170
+ }
+ Switch {
+  inputs 3
+  which {{"parent.gamut == 21 ? 1 : parent.gamut == 22 ? 2 : 0"}}
+  name Switch1
+  xpos 689
+  ypos 249
+ }
+ Dot {
+  name Dot8
+  xpos 723
+  ypos 279
+ }
+set N65a4bd40 [stack 0]
+ Dot {
+  name Dot9
+  xpos 829
+  ypos 279
+ }
+ Expression {
+  expr0 r
+  expr1 (4*g)/(-2*g+12*b+3)
+  expr2 (9*b)/(-2*g+12*b+3)
+  name Expression1
+  label "Yxy -> Yu'v'"
+  xpos 795
+  ypos 304
+ }
+push $N65a4bd40
+ Switch {
+  inputs 2
+  which {{GamutGrid1.colorSpace}}
+  name Switch3
+  xpos 689
+  ypos 308
+ }
+ Dot {
+  name Dot1
+  xpos 723
+  ypos 342
+ }
+ Input {
+  inputs 0
+  name Color
+  xpos 327
+  ypos 16
+  number 1
+ }
+ Dot {
+  name Dot7
+  xpos 361
+  ypos 243
+ }
+push $N65a21dc0
+ Dot {
+  name Dot6
+  xpos 478
+  ypos 106
+ }
+set N65a62820 [stack 0]
+ Shuffle {
+  red white
+  green white
+  blue white
+  alpha white
+  name Shuffle1
+  xpos 444
+  ypos 149
+ }
+ Multiply {
+  value {0 1 1 1}
+  name Multiply4
+  xpos 444
+  ypos 175
+ }
+push $N65a62820
+ Dot {
+  name Dot4
+  xpos 554
+  ypos 106
+ }
+ Dot {
+  name Dot5
+  xpos 554
+  ypos 243
+ }
+ Switch {
+  inputs 3
+  which {{"\[exists parent.input1] ? 2 : parent.colorize"}}
+  name Switch2
+  xpos 444
+  ypos 239
+ }
+ BlinkScript {
+  inputs 2
+  recompileCount 2
+  ProgramGroup 1
+  KernelDescription "2 \"plot_cie_xy\" iterate pixelWise fc48d30b761944f4622c7e7cade9c548789bc618dc38d8ca992161542531f81f 3 \"col\" Read Random \"Yxy\" Read Random \"dst\" Write Random 3 \"padding\" Float 1 AAAAAA== \"left_margin\" Float 1 AAAAAA== \"process_input\" Bool 1 AA== 3 \"padding\" 1 1 \"left_margin\" 1 1 \"process_input\" 1 1 2 \"outsize\" Float 1 1 AAAAAA== \"offset\" Float 1 1 AAAAAA=="
+  kernelSource "kernel plot_cie_xy : public ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom, eEdgeClamped> col;\n  Image<eRead, eAccessRandom, eEdgeClamped> Yxy;\n  Image<eWrite, eAccessRandom> dst;\n\nparam:\n  float padding;\n  float left_margin;\n  bool process_input;\n\n\nlocal:\n  float outsize;\n  float offset;\n\n  void init() \{\n    // calculate output width and height and offset based on padding\n    outsize = dst.bounds.height()/padding;\n    // xy offset for margin on lower left corner\n    offset = dst.bounds.height()*left_margin;\n  \}\n\n  void process(int2 pos) \{\n    // All the work will be done in the first pixel of the iteration. Essentially a single thread.\n    if ( pos.x > 1 || pos.y > 1) \{ return; \}\n    // Loop over all pixels in input Yxy\n    if (process_input) \{\n      for ( int j = Yxy.bounds.y1; j < Yxy.bounds.y2; j++) \{\n        for ( int i = Yxy.bounds.x1; i < Yxy.bounds.x2; i++) \{\n          // sample Yxy pixel at position i, j\n          float2 xy = float2(Yxy(i, j, 1), Yxy(i, j, 2));\n          // don't process black pixels\n          if( xy.x == 0.0f && xy.y == 0.0f) \{ continue; \}\n          // calculate output position: xy chromaticity coordinates at centered output pixel position\n          float2 out_pos = float2(xy.x * outsize + offset, xy.y * outsize + offset);\n          // Write color value to xy sample position in dst\n          if ( dst.bounds.inside(out_pos.x, out_pos.y)) \{ dst(out_pos.x, out_pos.y) = col(i, j); \}\n        \}\n      \}\n    \}\n  \}\n\};"
+  vectorize false
+  rebuild ""
+  plot_cie_xy_padding 1
+  plot_cie_xy_process_input true
+  format "2048 2048 0 0 2048 2048 1 square_2K"
+  specifiedFormat true
+  rebuild_finalise ""
+  name Plot_Input
+  selected true
+  xpos 444
+  ypos 335
+ }
+ Output {
+  name Output1
+  xpos 444
+  ypos 403
+ }
+end_group
+Merge2 {
+ inputs 3+1
+ name Merge6
+ xpos -1417
+ ypos 940
+}
+Dilate {
+ size 1
+ name Dilate1
+ xpos -1417
+ ypos 984
+}
+Crop {
+ box {0 0 1536 1732}
+ reformat true
+ crop false
+ name Crop2
+ xpos -1417
+ ypos 1089
+}
+Reformat {
+ type scale
+ scale 0.612
+ name Reformat2
+ xpos -1417
+ ypos 1113
+}
+Text2 {
+ font_size_toolbar 100
+ font_width_toolbar 100
+ font_height_toolbar 100
+ message "polar grid compressed by\nJed Smith gamut mapper"
+ old_message {{112 111 108 97 114 32 103 114 105 100 32 99 111 109 112 114 101 115 115 101 100 32 98 121 10 74 101 100 32 83 109 105 116 104 32 103 97 109 117 116 32 109 97 112 112 101 114}
+   }
+ box {0 0 {input.width} {input.height}}
+ xjustify right
+ transforms {{0 2}
+   }
+ cursor_position 29
+ global_font_scale 0.5
+ center {470 530}
+ cursor_initialised true
+ autofit_bbox false
+ initial_cursor_position {{940 1060}
+   }
+ group_animations {{0} imported: 0 selected: items: "root transform/"}
+ animation_layers {{1 11 470 530 0 0 1 1 0 0 0 0}
+   }
+ color {1 1 1 1}
+ name Text3
+ xpos -1417
+ ypos 1137
+}
+Viewer {
+ inputs 2
+ frame 17
+ frame_range 0-0
+ input_number 1
+ full_frame_processing true
+ viewerProcess None
+ name Viewer1
+ xpos -761
+ ypos 1671
+}

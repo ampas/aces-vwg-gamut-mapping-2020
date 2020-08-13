@@ -133,8 +133,14 @@ def compress(dist, lim, thr, invert, method, power):
 
 
 def main(rgb, method=2, invert=False, hexagonal=False, threshold=0.8, cyan=0.09, magenta=0.24, yellow=0.12, power=1.2, shd_rolloff=0):
+    rgb = np.asarray(rgb)
+    threshold = np.asarray(threshold)
+    if not threshold.shape:
+        threshold = np.tile(threshold, 3)
+
     # thr is the percentage of the core gamut to protect.
-    thr = np.clip(threshold, -np.inf, 0.9999)
+    thr = np.clip(threshold, -np.inf, 0.9999).reshape(
+        [1] * (rgb.ndim - 1) + [3])
 
     # lim is the max distance from the gamut boundary that will be compressed
     # 0 is a no-op, 1 will compress colors from a distance of 2 from achromatic to the gamut boundary
@@ -148,9 +154,9 @@ def main(rgb, method=2, invert=False, hexagonal=False, threshold=0.8, cyan=0.09,
         # Not sure of a way to pre-calculate a constant using the values from the ui parameters in GLSL...
         # This approach might have performance implications
         lim = np.array([
-            bisect(max(0.0001, cyan)+1, threshold, method),
-            bisect(max(0.0001, magenta)+1, threshold, method),
-            bisect(max(0.0001, yellow)+1, threshold, method)])
+            bisect(np.clip(cyan, 0.0001, np.inf)+1, np.float(np.squeeze(thr[..., 0])), method),
+            bisect(np.clip(magenta, 0.0001, np.inf)+1, np.float(np.squeeze(thr[..., 1])), method),
+            bisect(np.clip(yellow, 0.0001, np.inf)+1, np.float(np.squeeze(thr[..., 2])), method)])
 
     # achromatic axis
     ach = np.max(rgb, axis=-1)[..., np.newaxis]
@@ -189,7 +195,7 @@ def generate_test_images(samples=16):
         return
 
     np.random.seed(4)
-    RGB = (np.random.random([samples, samples, 3]) - 0.5) * 2
+    RGB = (np.random.random([samples, samples, 3]) - 0.5) * 4
     name_template = 'Gamut_Compress_{0}.exr'
     colour.write_image(RGB, name_template.format('Reference'))
     for method in range(0, 6):
@@ -199,7 +205,19 @@ def generate_test_images(samples=16):
 
         colour.write_image(
             gamut_compression_operator(RGB, method=method, hexagonal=True),
-            name_template.format('GM_Hexagonal_Method_{0}'.format(method)))
+            name_template.format('GM_Method_{0}_Hexagonal'.format(method)))
+
+        colour.write_image(
+            gamut_compression_operator(
+                RGB, threshold=[0.2, 0.4, 0.6], method=method),
+            name_template.format(
+                'GM_Method_{0}_DecoupledThreshold'.format(method)))
+
+        colour.write_image(
+            gamut_compression_operator(
+                RGB, threshold=[0.2, 0.4, 0.6], method=method, hexagonal=True),
+            name_template.format(
+                'GM_Method_{0}_Hexagonal_DecoupledThreshold'.format(method)))
 
 
 if __name__ == '__main__':

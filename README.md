@@ -26,6 +26,7 @@ The following implementations are available in the [model](model) directory:
 - Fuse for [Fusion Studio](https://www.blackmagicdesign.com/products/fusion/)
 - Matchbox GLSL for [Autodesk Flame & Smoke](https://www.autodesk.com/products/flame/)
 - Nuke Script for [The Foundry Nuke](https://www.foundry.com/products/nuke)
+- Python Script for [Numpy](https://numpy.org/)
 
 ## Research
 

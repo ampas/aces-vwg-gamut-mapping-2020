@@ -4,19 +4,6 @@ uniform int working_colorspace;
 uniform bool invert, overlay;
 uniform vec3 threshold;
 
-const float pi = 3.14159265359;
-
-// calc hyperbolic tangent
-float tanh( float val) {
-  float f = exp(2.0*val);
-  return (f-1.0) / (f+1.0);
-}
-
-// calc inverse hyperbolic tangent
-float atanh( float val) {
-  return log((1.0+val)/(1.0-val))/2.0;
-}
-
 // Convert acescg to acescct
 float lin_to_acescct(float val) {
   if (val <= 0.0078125) {

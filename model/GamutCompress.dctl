@@ -9,8 +9,6 @@ DEFINE_UI_PARAMS(working_colorspace, working space, DCTLUI_COMBO_BOX, 0, {acescc
 DEFINE_UI_PARAMS(invert, invert, DCTLUI_CHECK_BOX, 0);
 DEFINE_UI_PARAMS(overlay, overlay graph, DCTLUI_CHECK_BOX, 0)
 
-__CONSTANT__ float pi = 3.14159265359f;
-
 // Convert acescg to acescct
 __DEVICE__ float lin_to_acescct(float in) {
   if (in <= 0.0078125f) {

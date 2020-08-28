@@ -15,11 +15,8 @@ kernel GamutCompression : public ImageComputationKernel<ePixelWise> {
   local:
   float3 thr;
   float3 lim;
-  float pi;
 
   void init() {
-    pi = 3.14159265359;
-
     // thr is the percentage of the core gamut to preserve
     thr = float3(min(0.9999f, threshold.x), min(0.9999f, threshold.y), min(0.9999f, threshold.z));
 

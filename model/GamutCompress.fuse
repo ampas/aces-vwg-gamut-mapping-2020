@@ -211,8 +211,6 @@ SolidParams = [[
 
  
 SolidKernel = [[
-  __CONSTANT__ float pi = 3.14159265359f;
-
   // calculate compressed distance
   __DEVICE__ float compress(float dist, float lim, float thr, bool invert, float power) {
     float cdist, s;

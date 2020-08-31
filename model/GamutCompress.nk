@@ -11,7 +11,6 @@ Group {
  addUserKnob {41 magenta t "Maximum distance beyond the blue-red gamut boundary to compress to the gamut boundary." T compress.magenta}
  addUserKnob {41 yellow t "Maximum distance beyond the red-green gamut boundary to compress to the gamut boundary." T compress.yellow}
  addUserKnob {6 overlay l "graph overlay" +STARTLINE}
- overlay true
  addUserKnob {22 reset t "Reset knobs to default values. Distance limits are calculated based on an the average of a selection of digital cinema cameras." T "n = nuke.thisNode()\nnuke.root().begin()\ndefaults = \{\n    'threshold': 0.8,\n    'power': 1.2,\n    'cyan': 0.09,\n    'magenta':0.24,\n    'yellow': 0.12,\n\}\nfor k, v in defaults.items():\n    n\[k].setValue(v)" +STARTLINE}
  addUserKnob {26 ""}
  addUserKnob {4 direction M {forward inverse}}
@@ -30,7 +29,7 @@ Group {
   xpos -6
   ypos -174
  }
-set N6f4c5800 [stack 0]
+set N3ebe5400 [stack 0]
  Dot {
   name Dot2
   xpos -226
@@ -43,8 +42,8 @@ set N6f4c5800 [stack 0]
   xpos -260
   ypos -130
  }
-set N6f4c5000 [stack 0]
-push $N6f4c5800
+set N3ebe4c00 [stack 0]
+push $N3ebe5400
  Merge2 {
   inputs 2
   operation minus
@@ -56,13 +55,13 @@ push $N6f4c5800
   xpos -40
   ypos -130
  }
-push $N6f4c5000
+push $N3ebe4c00
  Dot {
   name Dot1
   xpos -226
   ypos -78
  }
-set N6f4c4800 [stack 0]
+set N3ebe4400 [stack 0]
  Expression {
   expr0 abs(r)
   expr1 abs(g)
@@ -71,7 +70,7 @@ set N6f4c4800 [stack 0]
   xpos -167
   ypos -81
  }
-set N6f4c4400 [stack 0]
+set N3ebe4000 [stack 0]
  Merge2 {
   inputs 2
   operation divide
@@ -83,7 +82,7 @@ set N6f4c4400 [stack 0]
   xpos -40
   ypos -82
  }
-set N6f4c4000 [stack 0]
+set N5e5b3c00 [stack 0]
  Expression {
   expr0 "2 * x / (width - 1)"
   expr1 "2 * x / (width - 1)"
@@ -109,12 +108,6 @@ set N6f4c4000 [stack 0]
   addUserKnob {7 yellow}
   yellow {{parent.compress.yellow}}
   addUserKnob {26 ""}
-  addUserKnob {7 lim_x R -5 2}
-  lim_x 0.6439501953
-  addUserKnob {7 lim_y R -5 2}
-  lim_y 0.8228656006
-  addUserKnob {7 lim_z R -5 2}
-  lim_z 0.7155163574
   addUserKnob {26 ""}
   addUserKnob {6 invert +STARTLINE}
   invert {{parent.direction}}
@@ -130,7 +123,7 @@ set N6f4c4000 [stack 0]
    xpos -6
    ypos -30
   }
-set N6f317400 [stack 0]
+set N5e5b3000 [stack 0]
   Dot {
    name Dot1
    xpos 434
@@ -156,7 +149,7 @@ set N6f317400 [stack 0]
    addUserKnob {7 p R 1 5}
    p {{parent.power}}
   }
-push $N6f317400
+push $N5e5b3000
   Dot {
    name Dot6
    xpos -446
@@ -204,22 +197,21 @@ push $N6f317400
   xpos 180
   ypos 185
  }
-push $N6f4c4800
+push $N3ebe4400
  Dot {
   name Dot3
   xpos -226
   ypos 234
  }
-push $N6f4c4400
+push $N3ebe4000
  Dot {
   name Dot7
   xpos -133
   ypos 185
  }
-push $N6f4c4000
+push $N5e5b3c00
  Group {
   name compress
-  selected true
   xpos -40
   ypos 62
   addUserKnob {20 compress}
@@ -235,12 +227,6 @@ push $N6f4c4000
   addUserKnob {7 yellow}
   yellow 0.12
   addUserKnob {26 ""}
-  addUserKnob {7 lim_x R -5 2}
-  lim_x 0.6439501953
-  addUserKnob {7 lim_y R -5 2}
-  lim_y 0.8228656006
-  addUserKnob {7 lim_z R -5 2}
-  lim_z 0.7155163574
   addUserKnob {26 ""}
   addUserKnob {6 invert +STARTLINE}
   invert {{parent.direction}}
@@ -256,7 +242,7 @@ push $N6f4c4000
    xpos -6
    ypos -30
   }
-set N704a4c00 [stack 0]
+set N5e0fc800 [stack 0]
   Dot {
    name Dot1
    xpos 434
@@ -282,7 +268,7 @@ set N704a4c00 [stack 0]
    addUserKnob {7 p R 1 5}
    p {{parent.power}}
   }
-push $N704a4c00
+push $N5e0fc800
   Dot {
    name Dot6
    xpos -446
@@ -343,10 +329,9 @@ push $N704a4c00
   xpos -40
   ypos 230
  }
-set N702b7000 [stack 0]
+set N5d480c00 [stack 0]
  Merge2 {
   inputs 2
-  operation screen
   name Merge7
   xpos 180
   ypos 231
@@ -356,7 +341,7 @@ set N702b7000 [stack 0]
   xpos 214
   ypos 268
  }
-push $N702b7000
+push $N5d480c00
  Switch {
   inputs 2
   which {{parent.overlay}}

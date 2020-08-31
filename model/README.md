@@ -29,6 +29,8 @@ DCC Implementations for the following software packages are included. For specif
 - [DCTL for Resolve Studio](/model/docs/doc-resolve.md)
 - [Matchbox for Flame, Scratch and Baselight](/model/docs/doc-flame.md)
 
+## Default Parameter Values
+This [Google Colab notebook](https://colab.research.google.com/drive/1YNpvXfbipfVl2K5GYgo_byn2gV2iwGcm?usp=sharing) shows calculations for the threshold values needed to protect the colors of the ColorChecker24, [as defined in Table D.1 of SMPTE ST.2065-1](https://docs.google.com/spreadsheets/d/14S63V-BpG9l9KoNFvLb7W02dPRb3LNjdLRT7RZjKtkY), and the distance limits needed to map the entirety of a set of common camera encoding gamuts into AP1.
 
 ## Documentation
 For more information about [how the it works](/model/docs/gamut-compress-algorithm.md) and [how to use it](/model/docs/gamut-compress-documentation.md), please check out the [documentation](/model/docs).

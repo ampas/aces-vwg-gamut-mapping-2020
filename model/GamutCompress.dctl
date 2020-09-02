@@ -1,10 +1,10 @@
-DEFINE_UI_PARAMS(threshold_r, threshold c, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
-DEFINE_UI_PARAMS(threshold_g, threshold m, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
-DEFINE_UI_PARAMS(threshold_b, threshold y, DCTLUI_SLIDER_FLOAT, 0.8f, 0.4f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(threshold_r, threshold c, DCTLUI_SLIDER_FLOAT, 0.815f, 0.4f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(threshold_g, threshold m, DCTLUI_SLIDER_FLOAT, 0.803f, 0.4f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(threshold_b, threshold y, DCTLUI_SLIDER_FLOAT, 0.88f, 0.4f, 1.0f, 0.0f);
 DEFINE_UI_PARAMS(power, power, DCTLUI_SLIDER_FLOAT, 1.2f, 1.0f, 3.0f, 1.0f);
-DEFINE_UI_PARAMS(cyan, cyan, DCTLUI_SLIDER_FLOAT, 0.09f, 0.0f, 1.0f, 0.0f);
-DEFINE_UI_PARAMS(magenta, magenta, DCTLUI_SLIDER_FLOAT, 0.24f, 0.0f, 1.0f, 0.0f);
-DEFINE_UI_PARAMS(yellow, yellow, DCTLUI_SLIDER_FLOAT, 0.12f, 0.0f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(cyan, cyan, DCTLUI_SLIDER_FLOAT, 0.147f, 0.0f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(magenta, magenta, DCTLUI_SLIDER_FLOAT, 0.264f, 0.0f, 1.0f, 0.0f);
+DEFINE_UI_PARAMS(yellow, yellow, DCTLUI_SLIDER_FLOAT, 0.312f, 0.0f, 1.0f, 0.0f);
 DEFINE_UI_PARAMS(working_colorspace, working space, DCTLUI_COMBO_BOX, 0, {acescct, acescc, acescg}, {acescct, acescc, acescg});
 DEFINE_UI_PARAMS(invert, invert, DCTLUI_CHECK_BOX, 0);
 DEFINE_UI_PARAMS(overlay, overlay graph, DCTLUI_CHECK_BOX, 0)

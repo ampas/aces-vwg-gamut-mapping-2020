@@ -66,11 +66,11 @@ https://community.acescentral.com/c/aces-development-acesnext/vwg-aces-gamut-map
       </Uniform>
       <Uniform Inc="0.01" Tooltip="Percentage of the outer gamut boundary to protect. A value of 0.8 means 20% of the outer gamut will be utilized for gamut compression." 
         Row="3" Col="0" Page="0" IconType="None" ValueType="Position" Type="vec3" ChannelName="threshold" DisplayName="threshold" Name="threshold">
-        <SubUniform ResDependent="None" Max="1.0" Min="0.4" Default="0.8">
+        <SubUniform ResDependent="None" Max="1.0" Min="0.4" Default="0.815">
         </SubUniform>
-        <SubUniform ResDependent="None" Max="1.0" Min="0.4" Default="0.8">
+        <SubUniform ResDependent="None" Max="1.0" Min="0.4" Default="0.803">
         </SubUniform>
-        <SubUniform ResDependent="None" Max="1.0" Min="0.4" Default="0.8">
+        <SubUniform ResDependent="None" Max="1.0" Min="0.4" Default="0.88">
         </SubUniform>
       </Uniform>
       <Uniform ResDependent="None" Max="3" Min="1" Default="1.2" Inc="0.01" 
@@ -79,15 +79,15 @@ https://community.acescentral.com/c/aces-development-acesnext/vwg-aces-gamut-map
 Be wary of high values if accurate inversion is important to you." 
         Row="3" Col="1" Page="0" Type="float" ChannelName="power" DisplayName="power" Name="power">
       </Uniform>
-      <Uniform ResDependent="None" Max="1.0" Min="0.0" Default="0.09" Inc="0.01" 
+      <Uniform ResDependent="None" Max="1.0" Min="0.0" Default="0.147" Inc="0.01" 
         Tooltip="Maximum distance beyond the green-blue gamut boundary to compress to the gamut boundary." 
         Row="0" Col="0" Page="0" Type="float" ChannelName="cyan" DisplayName="cyan" Name="cyan">
       </Uniform>
-      <Uniform ResDependent="None" Max="1.0" Min="0.0" Default="0.24" Inc="0.01" 
+      <Uniform ResDependent="None" Max="1.0" Min="0.0" Default="0.264" Inc="0.01" 
         Tooltip="Maximum distance beyond the blue-red gamut boundary to compress to the gamut boundary." 
         Row="1" Col="0" Page="0" Type="float" ChannelName="magenta" DisplayName="magenta" Name="magenta">
       </Uniform>
-      <Uniform ResDependent="None" Max="1.0" Min="0.0" Default="0.12" Inc="0.01" 
+      <Uniform ResDependent="None" Max="1.0" Min="0.0" Default="0.312" Inc="0.01" 
         Tooltip="Maximum distance beyond the red-green gamut boundary to compress to the gamut boundary."
         Row="2" Col="0" Page="0" Type="float" ChannelName="yellow" DisplayName="yellow" Name="yellow">
       </Uniform>

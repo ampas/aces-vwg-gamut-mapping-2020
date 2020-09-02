@@ -73,7 +73,7 @@ function Create()
   InThresholdR = self:AddInput("threshold_c", "threshold_c", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
-    INP_Default = 0.8,
+    INP_Default = 0.815,
     INP_MinAllowed = 0.4,
     INP_MaxScale = 0.9999,
   })
@@ -81,7 +81,7 @@ function Create()
   InThresholdG = self:AddInput("threshold_m", "threshold_m", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
-    INP_Default = 0.8,
+    INP_Default = 0.803,
     INP_MinAllowed = 0.4,
     INP_MaxScale = 0.9999,
   })
@@ -89,7 +89,7 @@ function Create()
   InThresholdB = self:AddInput("threshold_y", "threshold_y", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
-    INP_Default = 0.8,
+    INP_Default = 0.88,
     INP_MinAllowed = 0.4,
     INP_MaxScale = 0.9999,
   })
@@ -107,7 +107,7 @@ function Create()
   InCyan = self:AddInput("cyan", "cyan", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
-    INP_Default = 0.09,
+    INP_Default = 0.147,
     INP_MinAllowed = 0,
     INP_MaxScale = 1,
   })
@@ -115,7 +115,7 @@ function Create()
   InMagenta = self:AddInput("magenta", "magenta", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
-    INP_Default = 0.24,
+    INP_Default = 0.264,
     INP_MinAllowed = 0,
     INP_MaxScale = 1,
   })
@@ -123,7 +123,7 @@ function Create()
   InYellow = self:AddInput("yellow", "yellow", {
     LINKID_DataType = "Number",
     INPID_InputControl = "SliderControl",
-    INP_Default = 0.12,
+    INP_Default = 0.312,
     INP_MinAllowed = 0,
     INP_MaxScale = 1,
   })

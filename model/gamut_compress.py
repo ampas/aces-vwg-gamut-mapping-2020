@@ -34,7 +34,7 @@ def compress(dist, lim, thr, invert, power):
     return cdist
 
 
-def main(rgb, invert=False, threshold=0.8, cyan=0.09, magenta=0.24, yellow=0.12, power=1.2):
+def main(rgb, invert=False, threshold=[0.815, 0.803, 0.88], cyan=0.147, magenta=0.264, yellow=0.312, power=1.2):
     rgb = np.asarray(rgb)
     threshold = np.asarray(threshold)
     if not threshold.shape:

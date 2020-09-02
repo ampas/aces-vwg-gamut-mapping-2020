@@ -28,6 +28,9 @@ The following implementations are available in the [model](model) directory:
 - Nuke Script for [The Foundry Nuke](https://www.foundry.com/products/nuke)
 - Python Script for [Numpy](https://numpy.org/)
 
+## Default Parameter Values
+This [Google Colab notebook](https://colab.research.google.com/drive/1ZMSQhyhXtAYQXfop6qhifXudDiPu4eTV?usp=sharing) shows calculations for the threshold values needed to protect the colors of the ColorChecker24, as defined in Annexe B of [TB-2014-004](http://j.mp/TB-2014-004), and the distance limits needed to map the entirety of a set of common camera encoding gamuts into AP1.
+
 ## Research
 
 The [research](research) directory contains a mix of useful resources pertaining to research, experimentation and analysis conducted by the Virtual Working Group.

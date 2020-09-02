@@ -1,21 +1,17 @@
 set cut_paste_input [stack 0]
 push $cut_paste_input
 Group {
- name GamutCompress
- label "\[value method]: \[value direction]"
+ name GamutCompress1
+ label "\[value direction]"
  addUserKnob {20 GamutCompress}
- addUserKnob {41 method T compress.method}
  addUserKnob {41 threshold t "Percentage of the gamut to protect. A value of 0.8 means 20% of the outer gamut will be utilized for gamut compression." T compress.threshold}
  addUserKnob {41 power T compress.power}
- addUserKnob {7 shd_rolloff l "shd rolloff" t "Shadow rolloff reduces the gamut compression effect below the specified pixel value. This reduces invertability issues with negative pixels in shadow grain." R 0 0.1}
  addUserKnob {26 distance_limit_label l " " t "Specifies the distance beyond the gamut boundary to map to the gamut boundary for each color component." T "<b>distance limit"}
  addUserKnob {41 cyan t "Maximum distance beyond the green-blue gamut boundary to compress to the gamut boundary." T compress.cyan}
  addUserKnob {41 magenta t "Maximum distance beyond the blue-red gamut boundary to compress to the gamut boundary." T compress.magenta}
  addUserKnob {41 yellow t "Maximum distance beyond the red-green gamut boundary to compress to the gamut boundary." T compress.yellow}
- addUserKnob {6 hexagonal t "Compress secondary colors in addition to primary colors. Uses variation on the algorithm suggested by Nick Shaw https://community.acescentral.com/t/a-variation-on-jeds-rgb-gamut-mapper/3060" +STARTLINE}
  addUserKnob {6 overlay l "graph overlay" +STARTLINE}
- overlay true
- addUserKnob {22 reset t "Reset knobs to default values. Distance limits are calculated based on an the average of a selection of digital cinema cameras." T "n = nuke.thisNode()\nnuke.root().begin()\ndefaults = \{\n    'threshold': 0.8,\n    'shd_rolloff': 0.0,\n    'power': 1.2,\n    'cyan': 0.09,\n    'magenta':0.24,\n    'yellow': 0.12,\n\}\nfor k, v in defaults.items():\n    n\[k].setValue(v)" +STARTLINE}
+ addUserKnob {22 reset t "Reset knobs to default values. Distance limits are calculated based on an the average of a selection of digital cinema cameras." T "n = nuke.thisNode()\nnuke.root().begin()\ndefaults = \{\n    'threshold': (0.815, 0.803, 0.88),\n    'power': 1.2,\n    'cyan': 0.147,\n    'magenta':0.264,\n    'yellow': 0.312,\n\}\nfor k, v in defaults.items():\n    n\[k].setValue(v)" +STARTLINE}
  addUserKnob {26 ""}
  addUserKnob {4 direction M {forward inverse}}
  addUserKnob {20 info_tab l Info}
@@ -33,7 +29,7 @@ Group {
   xpos -6
   ypos -174
  }
-set N1c41dc00 [stack 0]
+set N5a326400 [stack 0]
  Dot {
   name Dot2
   xpos -226
@@ -46,8 +42,8 @@ set N1c41dc00 [stack 0]
   xpos -260
   ypos -130
  }
-set N1c41d400 [stack 0]
-push $N1c41dc00
+set N78acdc00 [stack 0]
+push $N5a326400
  Merge2 {
   inputs 2
   operation minus
@@ -59,32 +55,22 @@ push $N1c41dc00
   xpos -40
   ypos -130
  }
-push $N1c41d400
+push $N78acdc00
  Dot {
   name Dot1
   xpos -226
   ypos -78
  }
-set N59f7d400 [stack 0]
+set N78acd400 [stack 0]
  Expression {
-  temp_name0 c_r
-  temp_expr0 1-r
-  temp_name1 c_g
-  temp_expr1 1-g
-  temp_name2 c_b
-  temp_expr2 1-b
-  expr0 1-(c_r<(1-thr)?c_r:(1-thr)+thr*tanh(((c_r-(1-thr))/thr)))
-  expr1 1-(c_g<(1-thr)?c_g:(1-thr)+thr*tanh(((c_g-(1-thr))/thr)))
-  expr2 1-(c_b<(1-thr)?c_b:(1-thr)+thr*tanh(((c_b-(1-thr))/thr)))
-  name toe
-  xpos -150
-  ypos -82
-  disable {{parent.shd_rolloff==0 x1 0}}
-  addUserKnob {20 Params_tab l Params}
-  addUserKnob {7 thr}
-  thr {{parent.shd_rolloff}}
+  expr0 abs(r)
+  expr1 abs(g)
+  expr2 abs(b)
+  name abs
+  xpos -167
+  ypos -81
  }
-set N59f7d000 [stack 0]
+set N78acd000 [stack 0]
  Merge2 {
   inputs 2
   operation divide
@@ -96,452 +82,32 @@ set N59f7d000 [stack 0]
   xpos -40
   ypos -82
  }
- Dot {
-  name Dot5
-  note_font "Helvetica Bold"
-  note_font_size 24
-  note_font_color 0xff
-  xpos -6
-  ypos -30
- }
-set N59f7c800 [stack 0]
- Dot {
-  name Dot8
-  note_font "Helvetica Bold"
-  note_font_size 24
-  note_font_color 0xff
-  xpos 104
-  ypos -30
- }
-set N59f7c400 [stack 0]
- Dot {
-  name Dot6
-  note_font "Helvetica Bold"
-  note_font_size 24
-  note_font_color 0xff
-  xpos 214
-  ypos -30
- }
- Expression {
-  channel0 {rgba.red rgba.green rgba.blue none}
-  expr0 max(r,g,b)
-  name sat
-  xpos 180
-  ypos 14
- }
-set N59f7dc00 [stack 0]
-push $N59f7c800
- Switch {
-  inputs 2
-  which {{parent.hexagonal}}
-  name Switch_hexagonal
-  note_font Helvetica
-  xpos -40
-  ypos 15
- }
- Group {
-  name compress
-  knobChanged "from math import (pow, exp, log, tan, atan, atanh, cos, pi, fabs)\n\ndef i_log(x):\n    return (exp((1-t+t*log(1-x)-x*t*log(1-x))/(t*(1-x))))*t+x*t-k\ndef i_exp(x):\n    return -log((-x+1)/(t-x))*(-t+x)+t-k\ndef i_atan(x):\n    return (2*tan((pi*(1-t))/(2*(x-t)))*(x-t))/pi+t-k\ndef i_tanh(x):\n    return atanh((1-t)/(x-t))*(x-t)+t-k\ndef sign(x):\n    return 0 if x == 0 else 1 if x > 0 else -1\n\ndef bisect(f, a, b):\n    if sign(f(a)) == sign(f(b)): \n        # bad estimate. return something close to linear\n        if method == 'exp' or method == 'log':\n            return -100\n        else: \n            return 1.99999\n    c = (a+b)/2.0\n    y = f(c)\n    if fabs(y) <= tol:\n        return c # lucky guess\n    n = 1\n    while fabs(y) > tol and n <= nmax:\n        if sign(y) == sign(f(a)):\n            a = c\n        else:\n            b = c\n        c = (a+b)/2.0\n        y = f(c)\n        n += 1\n    return c\n\ndef calc():\n    a = 1.0001\n    b = 5\n    if method == 'log':\n        f = i_log\n        a = -50\n        b = 0.98\n    elif method == 'exp':\n        f = i_exp\n    elif method == 'atan':\n        f = i_atan\n    elif method == 'tanh':\n        f = i_tanh\n        a = 1.000001\n    lim = bisect(f, a, b)\n    return lim\n\nn = nuke.thisNode()\nknob = nuke.thisKnob()\n\nn.begin()\nmeth = n\['method'].value()\nif meth != 'reinhard' and meth != 'power':\n    tol = 1e-3\n    nmax = 100\n    \n    tk = n\['threshold']\n    if tk.singleValue():\n        thr = \[tk.getValue()]*3\n    else:\n        thr = \[v for v in tk.getValue()]\n\n    method = n\['method'].value()\n\n    k_knobs = \['cyan', 'magenta', 'yellow']\n    lim_knobs = \['lim_x', 'lim_y', 'lim_z']\n    if knob.name() in k_knobs:\n        i = k_knobs.index(knob.name())\n        lim_knob = lim_knobs\[i]\n        t = thr\[i]\n        k = knob.getValue()+1\n        lim = calc()\n        n\[lim_knob].setValue(lim)\n    elif knob.name() == 'method' or knob.name() == 'threshold':\n        for i, lknob in enumerate(lim_knobs):\n            k = n\[k_knobs\[i]].getValue()+1\n            t = thr\[i]\n            lim = calc()\n            n\[lknob].setValue(lim)\nn.end()"
-  xpos -40
-  ypos 62
-  addUserKnob {20 compress}
-  addUserKnob {4 method M {log reinhard power exp atan tanh "" ""}}
-  method power
-  addUserKnob {18 threshold R 0.4 1}
-  threshold 0.8
-  addUserKnob {6 threshold_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-  addUserKnob {7 power R 1 3}
-  power 1.2
-  addUserKnob {7 cyan}
-  cyan 0.09
-  addUserKnob {7 magenta}
-  magenta 0.24
-  addUserKnob {7 yellow}
-  yellow 0.12
-  addUserKnob {26 ""}
-  addUserKnob {7 lim_x R -5 2}
-  lim_x 0.6439501953
-  addUserKnob {7 lim_y R -5 2}
-  lim_y 0.8228656006
-  addUserKnob {7 lim_z R -5 2}
-  lim_z 0.7155163574
-  addUserKnob {26 ""}
-  addUserKnob {6 invert +STARTLINE}
-  invert {{parent.direction}}
- }
-  Input {
-   inputs 0
-   name Input
-   xpos -40
-   ypos -130
-  }
-  Dot {
-   name Dot2
-   xpos -6
-   ypos -30
-  }
-set N59fb1800 [stack 0]
-  Dot {
-   name Dot1
-   xpos 434
-   ypos -30
-  }
-set N59fb1400 [stack 0]
-  Expression {
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*log((1+(r/(lim_x-thr_x)-thr_x/(lim_x-thr_x)))/(1-(r/(lim_x-thr_x)-thr_x/(lim_x-thr_x))))/2
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*log((1+(g/(lim_y-thr_y)-thr_y/(lim_y-thr_y)))/(1-(g/(lim_y-thr_y)-thr_y/(lim_y-thr_y))))/2
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*log((1+(b/(lim_z-thr_z)-thr_z/(lim_z-thr_z)))/(1-(b/(lim_z-thr_z)-thr_z/(lim_z-thr_z))))/2
-   name uncompress_tanh
-   xpos 730
-   ypos 39
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N59fb1400
-  Expression {
-   temp_name0 pi
-   temp_expr0 3.14159265359
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*2/pi*tan(pi/2*(r-thr_x)/(lim_x-thr_x))
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*2/pi*tan(pi/2*(g-thr_y)/(lim_y-thr_y))
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*2/pi*tan(pi/2*(b-thr_z)/(lim_z-thr_z))
-   name uncompress_atan
-   xpos 620
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N59fb1400
-  Expression {
-   expr0 r<thr_x?r:-log((r-lim_x)/(thr_x-lim_x))*(-thr_x+lim_x)+thr_x
-   expr1 g<thr_y?g:-log((g-lim_y)/(thr_y-lim_y))*(-thr_y+lim_y)+thr_y
-   expr2 b<thr_z?b:-log((b-lim_z)/(thr_z-lim_z))*(-thr_z+lim_z)+thr_z
-   name uncompress_exp
-   xpos 510
-   ypos 39
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N59fb1400
-  Expression {
-   expr0 (r<thr.r||lim.r<1.0001||r>thr.r+s.r)?r:thr.r+s.r*pow(-(pow((r-thr.r)/s.r,p)/(pow((r-thr.r)/s.r,p)-1)),1/p)
-   expr1 (g<thr.g||lim.g<1.0001||g>thr.g+s.g)?g:thr.g+s.g*pow(-(pow((g-thr.g)/s.g,p)/(pow((g-thr.g)/s.g,p)-1)),1/p)
-   expr2 (b<thr.b||lim.b<1.0001||b>thr.b+s.b)?b:thr.b+s.b*pow(-(pow((b-thr.b)/s.b,p)/(pow((b-thr.b)/s.b,p)-1)),1/p)
-   name uncompress_power
-   xpos 400
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {18 thr}
-   thr {{min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)}}
-   addUserKnob {6 thr_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-   addUserKnob {18 lim}
-   lim {{parent.cyan+1} {parent.magenta+1} {parent.yellow+1}}
-   addUserKnob {6 lim_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-   addUserKnob {18 s}
-   s {{(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)}}
-   addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-   addUserKnob {7 p R 1 5}
-   p {{parent.power}}
-  }
-push $N59fb1400
-  Expression {
-   expr0 r<thr_x?r:(thr_x+1/(1/(r-thr_x)-1/(1-thr_x)+1/(lim_x-thr_x)))
-   expr1 g<thr_y?g:(thr_y+1/(1/(g-thr_y)-1/(1-thr_y)+1/(lim_y-thr_y)))
-   expr2 b<thr_z?b:(thr_z+1/(1/(b-thr_z)-1/(1-thr_z)+1/(lim_z-thr_z)))
-   name uncompress_reinhard
-   xpos 290
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.compress_reinhard.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.compress_reinhard.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.compress_reinhard.lim_z}}
-  }
-push $N59fb1400
-  Expression {
-   expr0 r<thr_x?r:exp((r-thr_x+thr_x*log(1-lim_x)-lim_x*thr_x*log(1-lim_x))/(thr_x*(1-lim_x)))*thr_x+lim_x*thr_x
-   expr1 "g<thr_y?g:exp((g-thr_y+thr_y*log(1-lim_y)-lim_y*thr_y*log(1-lim_y))/(thr_y*(1-lim_y)))*thr_y+lim_y*thr_y\n"
-   expr2 b<thr_z?b:exp((b-thr_z+thr_z*log(1-lim_z)-lim_z*thr_z*log(1-lim_z))/(thr_z*(1-lim_z)))*thr_z+lim_z*thr_z
-   name uncompress_log
-   xpos 180
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-  Switch {
-   inputs 6
-   which {{parent.method}}
-   name switch_method1
-   xpos 400
-   ypos 134
-  }
-push $N59fb1800
-  Dot {
-   name Dot6
-   xpos -446
-   ypos -30
-  }
-set N59fe9800 [stack 0]
-  Expression {
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*tanh(((r-thr_x)/(lim_x-thr_x)))
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*tanh(((g-thr_y)/(lim_y-thr_y)))
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*tanh(((b-thr_z)/(lim_z-thr_z)))
-   name compress_tanh
-   xpos -150
-   ypos 39
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N59fe9800
-  Expression {
-   temp_name0 pi
-   temp_expr0 3.14159265359
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*2/pi*atan(pi/2*(r-thr_x)/(lim_x-thr_x))
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*2/pi*atan(pi/2*(g-thr_y)/(lim_y-thr_y))
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*2/pi*atan(pi/2*(b-thr_z)/(lim_z-thr_z))
-   name compress_atan
-   xpos -260
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N59fe9800
-  Expression {
-   expr0 r<thr_x?r:lim_x-(lim_x-thr_x)*exp(-(((r-thr_x)*((lim_x)/(lim_x-thr_x))/lim_x)))
-   expr1 g<thr_y?g:lim_y-(lim_y-thr_y)*exp(-(((g-thr_y)*((lim_y)/(lim_y-thr_y))/lim_y)))
-   expr2 b<thr_z?b:lim_z-(lim_z-thr_z)*exp(-(((b-thr_z)*((lim_z)/(lim_z-thr_z))/lim_z)))
-   name compress_exp
-   xpos -370
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N59fe9800
-  Expression {
-   expr0 (r<thr.r||lim.r<1.0001)?r:thr.r+s.r*((r-thr.r)/s.r)/(pow(1+pow((r-thr.r)/s.r,p),1/p))
-   expr1 (g<thr.g||lim.g<1.0001)?g:thr.g+s.g*((g-thr.g)/s.g)/(pow(1+pow((g-thr.g)/s.g,p),1/p))
-   expr2 (b<thr.b||lim.b<1.0001)?b:thr.b+s.b*((b-thr.b)/s.b)/(pow(1+pow((b-thr.b)/s.b,p),1/p))
-   name compress_power1
-   xpos -480
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {18 thr}
-   thr {{"min(0.9999, parent.threshold)"} {"min(0.9999, parent.threshold)"} {"min(0.9999, parent.threshold)"}}
-   addUserKnob {6 thr_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-   addUserKnob {18 lim}
-   lim {{parent.cyan+1} {parent.magenta+1} {parent.yellow+1}}
-   addUserKnob {6 lim_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-   addUserKnob {18 s}
-   s {{(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)}}
-   addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
-   addUserKnob {7 p R 1 5}
-   p {{parent.power}}
-  }
-push $N59fe9800
-  Expression {
-   expr0 r<thr_x?r:(thr_x+1/(1/(r-thr_x)+1/(1-thr_x)-1/(lim_x-thr_x)))
-   expr1 g<thr_y?g:(thr_y+1/(1/(g-thr_y)+1/(1-thr_y)-1/(lim_y-thr_y)))
-   expr2 b<thr_z?b:(thr_z+1/(1/(b-thr_z)+1/(1-thr_z)-1/(lim_z-thr_z)))
-   name compress_reinhard
-   xpos -590
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.cyan+1}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.magenta+1}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.yellow+1}}
-  }
-push $N59fe9800
-  Expression {
-   expr0 r<thr_x?r:thr_x*log(r/thr_x-lim_x)-lim_x*thr_x*log(r/thr_x-lim_x)+thr_x-thr_x*log(1-lim_x)+lim_x*thr_x*log(1-lim_x)
-   expr1 g<thr_y?g:thr_y*log(g/thr_y-lim_y)-lim_y*thr_y*log(g/thr_y-lim_y)+thr_y-thr_y*log(1-lim_y)+lim_y*thr_y*log(1-lim_y)
-   expr2 b<thr_z?b:thr_z*log(b/thr_z-lim_z)-lim_z*thr_z*log(b/thr_z-lim_z)+thr_z-thr_z*log(1-lim_z)+lim_z*thr_z*log(1-lim_z)
-   name compress_log
-   xpos -700
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-  Switch {
-   inputs 6
-   which {{parent.method}}
-   name switch_method
-   xpos -480
-   ypos 134
-  }
-  Switch {
-   inputs 2
-   which {{parent.invert}}
-   name switch_reverse
-   xpos -40
-   ypos 230
-  }
-  Output {
-   name Output
-   xpos -40
-   ypos 326
-  }
- end_group
-set N1c3d9b80 [stack 0]
-push $N59f7c400
- Merge2 {
-  inputs 2
-  operation multiply
-  bbox B
-  output rgb
-  name Merge4
-  note_font Helvetica
-  xpos 70
-  ypos 63
- }
-push $N59f7dc00
- Merge2 {
-  inputs 2
-  operation divide
-  bbox B
-  name Merge6
-  note_font Helvetica
-  xpos 180
-  ypos 111
- }
-set N5a035400 [stack 0]
+set N78accc00 [stack 0]
  Expression {
   expr0 "2 * x / (width - 1)"
   expr1 "2 * x / (width - 1)"
   expr2 "2 * x / (width - 1)"
   name Grad
   xpos 180
-  ypos 135
+  ypos -82
  }
  Group {
   name compress1
-  knobChanged "from math import (pow, exp, log, tan, atan, atanh, cos, pi, fabs)\n\ndef i_log(x):\n    return (exp((1-t+t*log(1-x)-x*t*log(1-x))/(t*(1-x))))*t+x*t-k\ndef i_exp(x):\n    return -log((-x+1)/(t-x))*(-t+x)+t-k\ndef i_atan(x):\n    return (2*tan((pi*(1-t))/(2*(x-t)))*(x-t))/pi+t-k\ndef i_tanh(x):\n    return atanh((1-t)/(x-t))*(x-t)+t-k\ndef sign(x):\n    return 0 if x == 0 else 1 if x > 0 else -1\n\ndef bisect(f, a, b):\n    if sign(f(a)) == sign(f(b)): \n        # bad estimate. return something close to linear\n        if method == 'exp' or method == 'log':\n            return -100\n        else: \n            return 1.99999\n    c = (a+b)/2.0\n    y = f(c)\n    if fabs(y) <= tol:\n        return c # lucky guess\n    n = 1\n    while fabs(y) > tol and n <= nmax:\n        if sign(y) == sign(f(a)):\n            a = c\n        else:\n            b = c\n        c = (a+b)/2.0\n        y = f(c)\n        n += 1\n    return c\n\ndef calc():\n    a = 1.0001\n    b = 5\n    if method == 'log':\n        f = i_log\n        a = -50\n        b = 0.98\n    elif method == 'exp':\n        f = i_exp\n    elif method == 'atan':\n        f = i_atan\n    elif method == 'tanh':\n        f = i_tanh\n        a = 1.000001\n    lim = bisect(f, a, b)\n    return lim\n\nn = nuke.thisNode()\nknob = nuke.thisKnob()\n\nn.begin()\nmeth = n\['method'].value()\nif meth != 'reinhard' and meth != 'power':\n    tol = 1e-3\n    nmax = 100\n    \n    tk = n\['threshold']\n    if tk.singleValue():\n        thr = \[tk.getValue()]*3\n    else:\n        thr = \[v for v in tk.getValue()]\n\n    method = n\['method'].value()\n\n    k_knobs = \['cyan', 'magenta', 'yellow']\n    lim_knobs = \['lim_x', 'lim_y', 'lim_z']\n    if knob.name() in k_knobs:\n        i = k_knobs.index(knob.name())\n        lim_knob = lim_knobs\[i]\n        t = thr\[i]\n        k = knob.getValue()+1\n        lim = calc()\n        n\[lim_knob].setValue(lim)\n    elif knob.name() == 'method' or knob.name() == 'threshold':\n        for i, lknob in enumerate(lim_knobs):\n            k = n\[k_knobs\[i]].getValue()+1\n            t = thr\[i]\n            lim = calc()\n            n\[lknob].setValue(lim)\nn.end()"
   xpos 180
-  ypos 172
+  ypos 63
   addUserKnob {20 compress}
-  addUserKnob {4 method M {log reinhard power exp atan tanh "" ""}}
-  method power
   addUserKnob {18 threshold R 0.4 1}
-  threshold {{parent.threshold}}
+  threshold {{parent.compress.threshold}}
   addUserKnob {6 threshold_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
   addUserKnob {7 power R 1 3}
-  power {{parent.power}}
+  power {{parent.compress.power}}
   addUserKnob {7 cyan}
-  cyan {{parent.cyan}}
+  cyan {{parent.compress.cyan}}
   addUserKnob {7 magenta}
-  magenta {{parent.magenta}}
+  magenta {{parent.compress.magenta}}
   addUserKnob {7 yellow}
-  yellow {{parent.yellow}}
+  yellow {{parent.compress.yellow}}
   addUserKnob {26 ""}
-  addUserKnob {7 lim_x R -5 2}
-  lim_x 0.6439501953
-  addUserKnob {7 lim_y R -5 2}
-  lim_y 0.8228656006
-  addUserKnob {7 lim_z R -5 2}
-  lim_z 0.7155163574
   addUserKnob {26 ""}
   addUserKnob {6 invert +STARTLINE}
   invert {{parent.direction}}
@@ -557,88 +123,19 @@ set N5a035400 [stack 0]
    xpos -6
    ypos -30
   }
-set N5a034800 [stack 0]
+set N78acc000 [stack 0]
   Dot {
    name Dot1
    xpos 434
    ypos -30
   }
-set N5a034400 [stack 0]
-  Expression {
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*log((1+(r/(lim_x-thr_x)-thr_x/(lim_x-thr_x)))/(1-(r/(lim_x-thr_x)-thr_x/(lim_x-thr_x))))/2
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*log((1+(g/(lim_y-thr_y)-thr_y/(lim_y-thr_y)))/(1-(g/(lim_y-thr_y)-thr_y/(lim_y-thr_y))))/2
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*log((1+(b/(lim_z-thr_z)-thr_z/(lim_z-thr_z)))/(1-(b/(lim_z-thr_z)-thr_z/(lim_z-thr_z))))/2
-   name uncompress_tanh
-   xpos 730
-   ypos 39
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N5a034400
-  Expression {
-   temp_name0 pi
-   temp_expr0 3.14159265359
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*2/pi*tan(pi/2*(r-thr_x)/(lim_x-thr_x))
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*2/pi*tan(pi/2*(g-thr_y)/(lim_y-thr_y))
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*2/pi*tan(pi/2*(b-thr_z)/(lim_z-thr_z))
-   name uncompress_atan
-   xpos 620
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N5a034400
-  Expression {
-   expr0 r<thr_x?r:-log((r-lim_x)/(thr_x-lim_x))*(-thr_x+lim_x)+thr_x
-   expr1 g<thr_y?g:-log((g-lim_y)/(thr_y-lim_y))*(-thr_y+lim_y)+thr_y
-   expr2 b<thr_z?b:-log((b-lim_z)/(thr_z-lim_z))*(-thr_z+lim_z)+thr_z
-   name uncompress_exp
-   xpos 510
-   ypos 39
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N5a034400
   Expression {
    expr0 (r<thr.r||lim.r<1.0001||r>thr.r+s.r)?r:thr.r+s.r*pow(-(pow((r-thr.r)/s.r,p)/(pow((r-thr.r)/s.r,p)-1)),1/p)
    expr1 (g<thr.g||lim.g<1.0001||g>thr.g+s.g)?g:thr.g+s.g*pow(-(pow((g-thr.g)/s.g,p)/(pow((g-thr.g)/s.g,p)-1)),1/p)
    expr2 (b<thr.b||lim.b<1.0001||b>thr.b+s.b)?b:thr.b+s.b*pow(-(pow((b-thr.b)/s.b,p)/(pow((b-thr.b)/s.b,p)-1)),1/p)
    name uncompress_power
    xpos 400
-   ypos 38
+   ypos 50
    addUserKnob {20 Params_tab l Params}
    addUserKnob {18 thr}
    thr {{min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)}}
@@ -652,132 +149,12 @@ push $N5a034400
    addUserKnob {7 p R 1 5}
    p {{parent.power}}
   }
-push $N5a034400
-  Expression {
-   expr0 r<thr_x?r:(thr_x+1/(1/(r-thr_x)-1/(1-thr_x)+1/(lim_x-thr_x)))
-   expr1 g<thr_y?g:(thr_y+1/(1/(g-thr_y)-1/(1-thr_y)+1/(lim_y-thr_y)))
-   expr2 b<thr_z?b:(thr_z+1/(1/(b-thr_z)-1/(1-thr_z)+1/(lim_z-thr_z)))
-   name uncompress_reinhard
-   xpos 290
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.compress_reinhard.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.compress_reinhard.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.compress_reinhard.lim_z}}
-  }
-push $N5a034400
-  Expression {
-   expr0 r<thr_x?r:exp((r-thr_x+thr_x*log(1-lim_x)-lim_x*thr_x*log(1-lim_x))/(thr_x*(1-lim_x)))*thr_x+lim_x*thr_x
-   expr1 "g<thr_y?g:exp((g-thr_y+thr_y*log(1-lim_y)-lim_y*thr_y*log(1-lim_y))/(thr_y*(1-lim_y)))*thr_y+lim_y*thr_y\n"
-   expr2 b<thr_z?b:exp((b-thr_z+thr_z*log(1-lim_z)-lim_z*thr_z*log(1-lim_z))/(thr_z*(1-lim_z)))*thr_z+lim_z*thr_z
-   name uncompress_log
-   xpos 180
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-  Switch {
-   inputs 6
-   which {{parent.method}}
-   name switch_method1
-   xpos 400
-   ypos 134
-  }
-push $N5a034800
+push $N78acc000
   Dot {
    name Dot6
    xpos -446
    ypos -30
   }
-set N5a166800 [stack 0]
-  Expression {
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*tanh(((r-thr_x)/(lim_x-thr_x)))
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*tanh(((g-thr_y)/(lim_y-thr_y)))
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*tanh(((b-thr_z)/(lim_z-thr_z)))
-   name compress_tanh
-   xpos -150
-   ypos 39
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N5a166800
-  Expression {
-   temp_name0 pi
-   temp_expr0 3.14159265359
-   expr0 r<thr_x?r:thr_x+(lim_x-thr_x)*2/pi*atan(pi/2*(r-thr_x)/(lim_x-thr_x))
-   expr1 g<thr_y?g:thr_y+(lim_y-thr_y)*2/pi*atan(pi/2*(g-thr_y)/(lim_y-thr_y))
-   expr2 b<thr_z?b:thr_z+(lim_z-thr_z)*2/pi*atan(pi/2*(b-thr_z)/(lim_z-thr_z))
-   name compress_atan
-   xpos -260
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N5a166800
-  Expression {
-   expr0 r<thr_x?r:lim_x-(lim_x-thr_x)*exp(-(((r-thr_x)*((lim_x)/(lim_x-thr_x))/lim_x)))
-   expr1 g<thr_y?g:lim_y-(lim_y-thr_y)*exp(-(((g-thr_y)*((lim_y)/(lim_y-thr_y))/lim_y)))
-   expr2 b<thr_z?b:lim_z-(lim_z-thr_z)*exp(-(((b-thr_z)*((lim_z)/(lim_z-thr_z))/lim_z)))
-   name compress_exp
-   xpos -370
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-push $N5a166800
   Expression {
    expr0 (r<thr.r||lim.r<1.0001)?r:thr.r+s.r*((r-thr.r)/s.r)/(pow(1+pow((r-thr.r)/s.r,p),1/p))
    expr1 (g<thr.g||lim.g<1.0001)?g:thr.g+s.g*((g-thr.g)/s.g)/(pow(1+pow((g-thr.g)/s.g,p),1/p))
@@ -797,57 +174,6 @@ push $N5a166800
    addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
    addUserKnob {7 p R 1 5}
    p {{parent.power}}
-  }
-push $N5a166800
-  Expression {
-   expr0 r<thr_x?r:(thr_x+1/(1/(r-thr_x)+1/(1-thr_x)-1/(lim_x-thr_x)))
-   expr1 g<thr_y?g:(thr_y+1/(1/(g-thr_y)+1/(1-thr_y)-1/(lim_y-thr_y)))
-   expr2 b<thr_z?b:(thr_z+1/(1/(b-thr_z)+1/(1-thr_z)-1/(lim_z-thr_z)))
-   name compress_reinhard
-   xpos -590
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.cyan+1}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.magenta+1}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.yellow+1}}
-  }
-push $N5a166800
-  Expression {
-   expr0 r<thr_x?r:thr_x*log(r/thr_x-lim_x)-lim_x*thr_x*log(r/thr_x-lim_x)+thr_x-thr_x*log(1-lim_x)+lim_x*thr_x*log(1-lim_x)
-   expr1 g<thr_y?g:thr_y*log(g/thr_y-lim_y)-lim_y*thr_y*log(g/thr_y-lim_y)+thr_y-thr_y*log(1-lim_y)+lim_y*thr_y*log(1-lim_y)
-   expr2 b<thr_z?b:thr_z*log(b/thr_z-lim_z)-lim_z*thr_z*log(b/thr_z-lim_z)+thr_z-thr_z*log(1-lim_z)+lim_z*thr_z*log(1-lim_z)
-   name compress_log
-   xpos -700
-   ypos 38
-   addUserKnob {20 Params_tab l Params}
-   addUserKnob {7 thr_x}
-   thr_x {{min(0.9999,parent.threshold.r)}}
-   addUserKnob {7 thr_y}
-   thr_y {{min(0.9999,parent.threshold.g)}}
-   addUserKnob {7 thr_z}
-   thr_z {{min(0.9999,parent.threshold.b)}}
-   addUserKnob {7 lim_x}
-   lim_x {{parent.lim_x}}
-   addUserKnob {7 lim_y}
-   lim_y {{parent.lim_y}}
-   addUserKnob {7 lim_z}
-   lim_z {{parent.lim_z}}
-  }
-  Switch {
-   inputs 6
-   which {{parent.method}}
-   name switch_method
-   xpos -480
-   ypos 134
   }
   Switch {
    inputs 2
@@ -869,30 +195,118 @@ push $N5a166800
   expr3 "abs(r - 2 * y / height) < 0.004 || abs(g - 2 * y / height) < 0.004 || abs(b - 2 * y / height) < 0.004 || abs(y - height / 2) < 0.002 ? 1 : 0"
   name Plot
   xpos 180
-  ypos 207
+  ypos 185
  }
-push $N59f7d400
+push $N78acd400
  Dot {
   name Dot3
   xpos -226
   ypos 234
  }
-push $N59f7d000
+push $N78acd000
  Dot {
   name Dot7
-  xpos -116
-  ypos 186
+  xpos -133
+  ypos 185
  }
-push $N5a035400
-push $N1c3d9b80
- Switch {
-  inputs 2
-  which {{parent.hexagonal}}
-  name Switch_hexagonal1
-  note_font Helvetica
+push $N78accc00
+ Group {
+  name compress
   xpos -40
-  ypos 111
+  ypos 62
+  addUserKnob {20 compress}
+  addUserKnob {18 threshold R 0.4 1}
+  threshold {0.815 0.803 0.88}
+  addUserKnob {6 threshold_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 power R 1 3}
+  power 1.2
+  addUserKnob {7 cyan}
+  cyan 0.147
+  addUserKnob {7 magenta}
+  magenta 0.264
+  addUserKnob {7 yellow}
+  yellow 0.312
+  addUserKnob {26 ""}
+  addUserKnob {26 ""}
+  addUserKnob {6 invert +STARTLINE}
+  invert {{parent.direction}}
  }
+  Input {
+   inputs 0
+   name Input
+   xpos -40
+   ypos -130
+  }
+  Dot {
+   name Dot2
+   xpos -6
+   ypos -30
+  }
+set N73b23800 [stack 0]
+  Dot {
+   name Dot1
+   xpos 434
+   ypos -30
+  }
+  Expression {
+   expr0 (r<thr.r||lim.r<1.0001||r>thr.r+s.r)?r:thr.r+s.r*pow(-(pow((r-thr.r)/s.r,p)/(pow((r-thr.r)/s.r,p)-1)),1/p)
+   expr1 (g<thr.g||lim.g<1.0001||g>thr.g+s.g)?g:thr.g+s.g*pow(-(pow((g-thr.g)/s.g,p)/(pow((g-thr.g)/s.g,p)-1)),1/p)
+   expr2 (b<thr.b||lim.b<1.0001||b>thr.b+s.b)?b:thr.b+s.b*pow(-(pow((b-thr.b)/s.b,p)/(pow((b-thr.b)/s.b,p)-1)),1/p)
+   name uncompress_power
+   xpos 400
+   ypos 50
+   addUserKnob {20 Params_tab l Params}
+   addUserKnob {18 thr}
+   thr {{min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)}}
+   addUserKnob {6 thr_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 lim}
+   lim {{parent.cyan+1} {parent.magenta+1} {parent.yellow+1}}
+   addUserKnob {6 lim_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 s}
+   s {{(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)}}
+   addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {7 p R 1 5}
+   p {{parent.power}}
+  }
+push $N73b23800
+  Dot {
+   name Dot6
+   xpos -446
+   ypos -30
+  }
+  Expression {
+   expr0 (r<thr.r||lim.r<1.0001)?r:thr.r+s.r*((r-thr.r)/s.r)/(pow(1+pow((r-thr.r)/s.r,p),1/p))
+   expr1 (g<thr.g||lim.g<1.0001)?g:thr.g+s.g*((g-thr.g)/s.g)/(pow(1+pow((g-thr.g)/s.g,p),1/p))
+   expr2 (b<thr.b||lim.b<1.0001)?b:thr.b+s.b*((b-thr.b)/s.b)/(pow(1+pow((b-thr.b)/s.b,p),1/p))
+   name compress_power1
+   xpos -480
+   ypos 38
+   addUserKnob {20 Params_tab l Params}
+   addUserKnob {18 thr}
+   thr {{"min(0.9999, parent.threshold)"} {"min(0.9999, parent.threshold)"} {"min(0.9999, parent.threshold)"}}
+   addUserKnob {6 thr_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 lim}
+   lim {{parent.cyan+1} {parent.magenta+1} {parent.yellow+1}}
+   addUserKnob {6 lim_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 s}
+   s {{(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)}}
+   addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {7 p R 1 5}
+   p {{parent.power}}
+  }
+  Switch {
+   inputs 2
+   which {{parent.invert}}
+   name switch_reverse
+   xpos -40
+   ypos 230
+  }
+  Output {
+   name Output
+   xpos -40
+   ypos 326
+  }
+ end_group
  Merge2 {
   inputs 2
   operation multiply
@@ -915,12 +329,10 @@ push $N1c3d9b80
   xpos -40
   ypos 230
  }
-set N5a1f5800 [stack 0]
+set N6a8a9c00 [stack 0]
  Merge2 {
   inputs 2
-  operation screen
   name Merge7
-  selected true
   xpos 180
   ypos 231
  }
@@ -929,7 +341,7 @@ set N5a1f5800 [stack 0]
   xpos 214
   ypos 268
  }
-push $N5a1f5800
+push $N6a8a9c00
  Switch {
   inputs 2
   which {{parent.overlay}}

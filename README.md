@@ -128,6 +128,11 @@ Please refer to the repository [README.md](https://github.com/johnson322/ArriGam
 A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias%20Scharfenberg%20-%20gamut_mapping_demo_v02.nk) illustrating some examples of simplistic approaches to the gamut mapping problem by
 [Matthias Scharfenberg](https://community.acescentral.com/t/simplistic-gamut-mapping-approaches-in-nuke/).
 
+#### Gamut Mapping Model as a 1D Shaper + 3D LUT
+
+A [The Foundry Nuke script](research/resources/scripts/scharfenberg/lut_shaper_example_v01.nk) showcasing how the gamut mapping model can be
+represented by a 1D Shaper + 3D LUT combination.
+
 #### Gamut Mapper Equal Hue Line Comparison in Nuke
 
 A [The Foundry Nuke script](research/resources/scripts/scharfenberg/Matthias%20Scharfenberg%20-%20gamut_mapper_equal_hue_line_comparison_v01.nk) comparing gamut mapped hue lines by Matthias Scharfenberg.

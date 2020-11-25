@@ -23,13 +23,18 @@ import "ACESlib.Transform_Common";
 
 
 /* --- Gamut Compress Parameters --- */
+// Percentage of the core gamut to protect.
 const float threshold_c = 0.815;
 const float threshold_m = 0.803;
 const float threshold_y = 0.880;
+
+// Agressiveness of the compression curve
 const float power = 1.2;
-const float cyan =  0.147;
-const float magenta = 0.264;
-const float yellow = 0.312;
+
+// Distance from achromatic which will be compressed to the gamut boundary
+const float cyan =  1.147;
+const float magenta = 1.264;
+const float yellow = 1.312;
 
 
 
@@ -41,10 +46,7 @@ float compress(float dist, float lim, float thr, bool invert, float power)
     if (dist < thr) {
         cdist = dist;
     }
-    else { // power(p) compression function plot https://www.desmos.com/calculator/54aytu7hek
-        if (lim < 1.0001) {
-            return dist; // disable compression, avoid nan
-        }
+    else {
         s = (lim - thr) / pow(pow((1.0 - thr) / (lim - thr), -power) - 1.0, 1.0 / power); // calc y=1 intersect
         if (!invert) {
             cdist = thr + s * ((dist - thr) / s) / (pow(1.0 + pow((dist - thr) / s, power), 1.0 / power)); // compress
@@ -82,17 +84,6 @@ void main
     // convert to ACEScg
     float lin_AP1[3] = mult_f3_f44(ACES, AP0_2_AP1_MAT);
 
-    // thr is the percentage of the core gamut to protect.
-    float thr[3] = {
-        min(0.9999, threshold_c),
-        min(0.9999, threshold_m),
-        min(0.9999, threshold_y)
-    };
-
-    // lim is the max distance from the gamut boundary that will be compressed
-    // 0 is a no-op, 1 will compress colors from a distance of 2.0 from achromatic to the gamut boundary
-    float lim[3] = {cyan + 1.0, magenta + 1.0, yellow + 1.0};
-
     // achromatic axis 
     float ach = max_f3(lin_AP1);
 
@@ -109,11 +100,11 @@ void main
         dist[2] = (ach - lin_AP1[2]) / fabs(ach);
     }
 
-    // compress distance with user controlled parameterized shaper function
+    // compress distance with parameterized shaper function
     float cdist[3] = {
-        compress(dist[0], lim[0], thr[0], invert, power),
-        compress(dist[1], lim[1], thr[1], invert, power),
-        compress(dist[2], lim[2], thr[2], invert, power)
+        compress(dist[0], cyan, threshold_c, invert, power),
+        compress(dist[1], magenta, threshold_m, invert, power),
+        compress(dist[2], yellow, threshold_y, invert, power)
     };
 
     // recalculate RGB from compressed distance and achromatic

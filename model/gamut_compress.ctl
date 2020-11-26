@@ -34,29 +34,32 @@ const float thr_magenta = 0.803;
 const float thr_yellow = 0.880;
 
 // Agressiveness of the compression curve
-const float power = 1.2;
+const float pwr = 1.2;
 
 
 
 // Calculate compressed distance
-float compress(float dist, float lim, float thr, float power, bool invert)
+float compress(float dist, float lim, float thr, float pwr, bool invert)
 {
     float compr_dist;
-    float s;
+    float scl;
     if (dist < thr) {
         compr_dist = dist;
     }
     else {
-        s = (lim - thr) / pow(pow((1.0 - thr) / (lim - thr), -power) - 1.0, 1.0 / power); // Calc y=1 intersect
+        // Calculate scale factor for y = 1 intersect
+        scl = (lim - thr) / pow(pow((1.0 - thr) / (lim - thr), -pwr) - 1.0, 1.0 / pwr);
         if (!invert) {
-            compr_dist = thr + s * ((dist - thr) / s) / (pow(1.0 + pow((dist - thr) / s, power), 1.0 / power)); // Compress
+            compr_dist = thr + scl * ((dist - thr) / scl)
+                / (pow(1.0 + pow((dist - thr) / scl, pwr), 1.0 / pwr)); // Compress
         }
         else {
-            if (dist > (thr + s)) {
+            if (dist > (thr + scl)) {
                 compr_dist = dist; // Avoid singularity
             }
             else {
-                compr_dist = thr + s * pow(-(pow((dist - thr) / s, power) / (pow((dist - thr) / s, power) - 1.0)), 1.0 / power); // Uncompress
+                compr_dist = thr + scl * pow(-(pow((dist - thr) / scl, pwr)
+                    / (pow((dist - thr) / scl, pwr) - 1.0)), 1.0 / pwr); // Uncompress
             }
         }
     }
@@ -102,9 +105,9 @@ void main
 
     // Compress distance with parameterized shaper function
     float compr_dist[3] = {
-        compress(dist[0], lim_cyan, thr_cyan, power, invert),
-        compress(dist[1], lim_magenta, thr_magenta, power, invert),
-        compress(dist[2], lim_yellow, thr_yellow, power, invert)
+        compress(dist[0], lim_cyan, thr_cyan, pwr, invert),
+        compress(dist[1], lim_magenta, thr_magenta, pwr, invert),
+        compress(dist[2], lim_yellow, thr_yellow, pwr, invert)
     };
 
     // Recalculate RGB from compressed distance and achromatic

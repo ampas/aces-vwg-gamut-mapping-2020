@@ -43,26 +43,33 @@ float compress(float dist, float lim, float thr, float pwr, bool invert)
 {
     float compr_dist;
     float scl;
+    float nd;
+    float p;
+
     if (dist < thr) {
-        compr_dist = dist;
+        compr_dist = dist; // No compression below threshold
     }
     else {
         // Calculate scale factor for y = 1 intersect
         scl = (lim - thr) / pow(pow((1.0 - thr) / (lim - thr), -pwr) - 1.0, 1.0 / pwr);
+
+        // Normalize distance outside threshold by scale factor
+        nd = (dist - thr) / scl;
+        p = pow(nd, pwr);
+
         if (!invert) {
-            compr_dist = thr + scl * ((dist - thr) / scl)
-                / (pow(1.0 + pow((dist - thr) / scl, pwr), 1.0 / pwr)); // Compress
+            compr_dist = thr + scl * nd / (pow(1.0 + p, 1.0 / pwr)); // Compress
         }
         else {
             if (dist > (thr + scl)) {
                 compr_dist = dist; // Avoid singularity
             }
             else {
-                compr_dist = thr + scl * pow(-(pow((dist - thr) / scl, pwr)
-                    / (pow((dist - thr) / scl, pwr) - 1.0)), 1.0 / pwr); // Uncompress
+                compr_dist = thr + scl * pow(-(p / (p - 1.0)), 1.0 / pwr); // Uncompress
             }
         }
     }
+
     return compr_dist;
 }
 
@@ -111,14 +118,14 @@ void main
     };
 
     // Recalculate RGB from compressed distance and achromatic
-    float cLin_AP1[3] = {
+    float compr_lin_AP1[3] = {
         ach - compr_dist[0] * fabs(ach),
         ach - compr_dist[1] * fabs(ach),
         ach - compr_dist[2] * fabs(ach)
     };
 
     // Convert back to ACES2065-1
-    ACES = mult_f3_f44(cLin_AP1, AP1_2_AP0_MAT);
+    ACES = mult_f3_f44(compr_lin_AP1, AP1_2_AP0_MAT);
 
     // Write output
     rOut = ACES[0];

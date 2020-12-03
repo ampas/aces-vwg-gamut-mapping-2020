@@ -1,4 +1,3 @@
-
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.VWG.GamutCompress.a1.v1</ACEStransformID>
 // <ACESuserName>ACES 1.3 Look - Gamut Compress</ACESuserName>
 
@@ -24,30 +23,30 @@ import "ACESlib.Transform_Common";
 
 /* --- Gamut Compress Parameters --- */
 // Distance from achromatic which will be compressed to the gamut boundary
-const float lim_cyan =  1.147;
-const float lim_magenta = 1.264;
-const float lim_yellow = 1.312;
+const float LIM_CYAN =  1.147;
+const float LIM_MAGENTA = 1.264;
+const float LIM_YELLOW = 1.312;
 
 // Percentage of the core gamut to protect
-const float thr_cyan = 0.815;
-const float thr_magenta = 0.803;
-const float thr_yellow = 0.880;
+const float THR_CYAN = 0.815;
+const float THR_MAGENTA = 0.803;
+const float THR_YELLOW = 0.880;
 
 // Agressiveness of the compression curve
-const float pwr = 1.2;
+const float PWR = 1.2;
 
 
 
 // Calculate compressed distance
 float compress(float dist, float lim, float thr, float pwr, bool invert)
 {
-    float compr_dist;
+    float comprDist;
     float scl;
     float nd;
     float p;
 
     if (dist < thr) {
-        compr_dist = dist; // No compression below threshold
+        comprDist = dist; // No compression below threshold
     }
     else {
         // Calculate scale factor for y = 1 intersect
@@ -58,19 +57,19 @@ float compress(float dist, float lim, float thr, float pwr, bool invert)
         p = pow(nd, pwr);
 
         if (!invert) {
-            compr_dist = thr + scl * nd / (pow(1.0 + p, 1.0 / pwr)); // Compress
+            comprDist = thr + scl * nd / (pow(1.0 + p, 1.0 / pwr)); // Compress
         }
         else {
             if (dist > (thr + scl)) {
-                compr_dist = dist; // Avoid singularity
+                comprDist = dist; // Avoid singularity
             }
             else {
-                compr_dist = thr + scl * pow(-(p / (p - 1.0)), 1.0 / pwr); // Uncompress
+                comprDist = thr + scl * pow(-(p / (p - 1.0)), 1.0 / pwr); // Uncompress
             }
         }
     }
 
-    return compr_dist;
+    return comprDist;
 }
 
 
@@ -92,10 +91,10 @@ void main
     float ACES[3] = {rIn, gIn, bIn};
 
     // Convert to ACEScg
-    float lin_AP1[3] = mult_f3_f44(ACES, AP0_2_AP1_MAT);
+    float linAP1[3] = mult_f3_f44(ACES, AP0_2_AP1_MAT);
 
     // Achromatic axis
-    float ach = max_f3(lin_AP1);
+    float ach = max_f3(linAP1);
 
     // Distance from the achromatic axis for each color component aka inverse RGB ratios
     float dist[3];
@@ -105,27 +104,27 @@ void main
         dist[2] = 0.0;
     }
     else {
-        dist[0] = (ach - lin_AP1[0]) / fabs(ach);
-        dist[1] = (ach - lin_AP1[1]) / fabs(ach);
-        dist[2] = (ach - lin_AP1[2]) / fabs(ach);
+        dist[0] = (ach - linAP1[0]) / fabs(ach);
+        dist[1] = (ach - linAP1[1]) / fabs(ach);
+        dist[2] = (ach - linAP1[2]) / fabs(ach);
     }
 
     // Compress distance with parameterized shaper function
-    float compr_dist[3] = {
-        compress(dist[0], lim_cyan, thr_cyan, pwr, invert),
-        compress(dist[1], lim_magenta, thr_magenta, pwr, invert),
-        compress(dist[2], lim_yellow, thr_yellow, pwr, invert)
+    float comprDist[3] = {
+        compress(dist[0], LIM_CYAN, THR_CYAN, PWR, invert),
+        compress(dist[1], LIM_MAGENTA, THR_MAGENTA, PWR, invert),
+        compress(dist[2], LIM_YELLOW, THR_YELLOW, PWR, invert)
     };
 
     // Recalculate RGB from compressed distance and achromatic
-    float compr_lin_AP1[3] = {
-        ach - compr_dist[0] * fabs(ach),
-        ach - compr_dist[1] * fabs(ach),
-        ach - compr_dist[2] * fabs(ach)
+    float comprLinAP1[3] = {
+        ach - comprDist[0] * fabs(ach),
+        ach - comprDist[1] * fabs(ach),
+        ach - comprDist[2] * fabs(ach)
     };
 
     // Convert back to ACES2065-1
-    ACES = mult_f3_f44(compr_lin_AP1, AP1_2_AP0_MAT);
+    ACES = mult_f3_f44(comprLinAP1, AP1_2_AP0_MAT);
 
     // Write output
     rOut = ACES[0];

@@ -2,17 +2,26 @@
 // <ACESuserName>ACES 1.3 Look - Gamut Compress</ACESuserName>
 
 //
-// "LMT" for compressing out of gamut scene-referred values into AP1.
-// 
-// Input and output are ACES2065-1.
+// Gamut compression algorithm to bring out-of-gamut scene-referred values into AP1
 //
 
 //
+// Usage:
+//  This transform is intended to be applied to AP0 data, immediately after the IDT, so
+//  that all grading or compositing operations are downstream of the compression, and
+//  therefore work only with positive AP1 values.
+//
+// Note:
+//  It is not recommended to bake the compression into VFX pulls, as it may be beneficial
+//  for compositors to have access to the unmodified image data.
+//
 // Direction:
-//    By default this transform operates in the forward direction (compressing the gamut).
-//    If instead an inverse operation is needed (undoing a prior gamut compression), there
-//    is a runtime flag to do this. In ctlrender, this can be achieved by appending 
-//    '-param1 invert 1' after the '-ctl gamut_compress.ctl' string.
+//  By default this transform operates in the forward direction, i.e. compressing the
+//  gamut. If instead an inverse operation is needed, i.e. undoing a prior gamut
+//  compression, there is a runtime flag available. In ctlrender, this can be achieved by
+//  appending '-param1 invert 1' after the '-ctl gamut_compress.ctl' string.
+//
+// Input and output: ACES2065-1
 //
 
 
@@ -23,16 +32,19 @@ import "ACESlib.Transform_Common";
 
 /* --- Gamut Compress Parameters --- */
 // Distance from achromatic which will be compressed to the gamut boundary
+// Values calculated to encompass the encoding gamuts of common digital cinema cameras
 const float LIM_CYAN =  1.147;
 const float LIM_MAGENTA = 1.264;
 const float LIM_YELLOW = 1.312;
 
 // Percentage of the core gamut to protect
+// Values calculated to protect all the colors of the ColorChecker Classic 24 as given by
+// ISO 17321-1 and Ohta (1997)
 const float THR_CYAN = 0.815;
 const float THR_MAGENTA = 0.803;
 const float THR_YELLOW = 0.880;
 
-// Agressiveness of the compression curve
+// Aggressiveness of the compression curve
 const float PWR = 1.2;
 
 

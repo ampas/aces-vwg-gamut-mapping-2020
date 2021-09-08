@@ -1,0 +1,123 @@
+// <ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.GamutCompress.a1.3.0</ACEStransformID>
+// <ACESuserName>ACES 1.3 Look - Gamut Compress</ACESuserName>
+
+//
+// Gamut compression algorithm to bring out-of-gamut scene-referred values into AP1
+//
+// This DCTL implementation assumes source image data is ACEScct
+//
+
+DEFINE_UI_PARAMS(direction, direction, DCTLUI_COMBO_BOX, 0, {forward, inverse}, {forward, inverse})
+
+/* --- Gamut Compress Parameters --- */
+// Distance from achromatic which will be compressed to the gamut boundary
+// Values calculated to encompass the encoding gamuts of common digital cinema cameras
+__CONSTANT__ float LIM_CYAN = 1.147f;
+__CONSTANT__ float LIM_MAGENTA = 1.264f;
+__CONSTANT__ float LIM_YELLOW = 1.312f;
+
+// Percentage of the core gamut to protect
+// Values calculated to protect all the colors of the ColorChecker Classic 24 as given by
+// ISO 17321-1 and Ohta (1997)
+__CONSTANT__ float THR_CYAN = 0.815f;
+__CONSTANT__ float THR_MAGENTA = 0.803f;
+__CONSTANT__ float THR_YELLOW = 0.88f;
+
+// Aggressiveness of the compression curve
+__CONSTANT__ float PWR = 1.2f;
+
+// Convert acescg to acescct
+__DEVICE__ float lin_to_acescct(float in) {
+  if (in <= 0.0078125f) {
+    return 10.5402377416545f * in + 0.0729055341958355f;
+  } else {
+    return (_log2f(in) + 9.72f) / 17.52f;
+  }
+}
+
+// Convert acescct to acescg
+__DEVICE__ float acescct_to_lin(float in) {
+  if (in > 0.155251141552511f) {
+    return _powf( 2.0f, in*17.52f - 9.72f);
+  } else {
+    return (in - 0.0729055341958355f) / 10.5402377416545f;
+  }
+}
+
+// calculate compressed distance
+__DEVICE__ float compress(float dist, float lim, float thr, bool invert, float pwr) {
+  float comprDist, scl, nd, p;
+
+  if (dist < thr) {
+    comprDist = dist; // No compression below threshold
+  } else {
+    // Calculate scale factor for y = 1 intersect
+    scl = (lim - thr) / pow(pow((1.0f - thr) / (lim - thr), -pwr) - 1.0f, 1.0f / pwr);
+
+    // Normalize distance outside threshold by scale factor
+    nd = (dist - thr) / scl;
+    p = pow(nd, pwr);
+
+    if (!invert) {
+      comprDist = thr + scl * nd / (pow(1.0f + p, 1.0f / pwr)); // Compress
+    }
+    else {
+      if (dist > (thr + scl)) {
+        comprDist = dist; // Avoid singularity
+      }
+      else {
+        comprDist = thr + scl * pow(-(p / (p - 1.0f)), 1.0f / pwr); // Uncompress
+      }
+    }
+  }
+
+  return comprDist;
+}
+
+__DEVICE__ float3 transform(int p_Width, int p_Height, int p_X, int p_Y, float p_R, float p_G, float p_B) 
+{
+  // Source pixels
+  float3 rgb = make_float3(p_R, p_G, p_B);
+
+  // Convert to ACEScg
+  rgb.x = acescct_to_lin(rgb.x);
+  rgb.y = acescct_to_lin(rgb.y);
+  rgb.z = acescct_to_lin(rgb.z);
+
+  // THR is the percentage of the core gamut to protect.
+  float3 thr = make_float3(THR_CYAN, THR_MAGENTA, THR_YELLOW);
+
+  // LIM is the max distance from the gamut boundary that will be compressed
+  float3 lim = make_float3(LIM_CYAN, LIM_MAGENTA, LIM_YELLOW);
+
+  // Achromatic axis 
+  float ach = _fmaxf(rgb.x, _fmaxf(rgb.y, rgb.z));
+
+  // Distance from the achromatic axis for each color component aka inverse rgb ratios
+  float3 dist;
+  dist.x = ach == 0.0f ? 0.0f : (ach - rgb.x) / _fabs(ach);
+  dist.y = ach == 0.0f ? 0.0f : (ach - rgb.y) / _fabs(ach);
+  dist.z = ach == 0.0f ? 0.0f : (ach - rgb.z) / _fabs(ach);
+
+  // Compress distance with parameterized shaper function
+  float3 comprDist;
+  comprDist = make_float3(
+    compress(dist.x, lim.x, thr.x, direction, PWR),
+    compress(dist.y, lim.y, thr.y, direction, PWR),
+    compress(dist.z, lim.z, thr.z, direction, PWR));
+
+  // Recalculate RGB from compressed distance and achromatic
+  float3 comprLinAP1 = make_float3(
+    ach - comprDist.x * _fabs(ach),
+    ach - comprDist.y * _fabs(ach),
+    ach - comprDist.z * _fabs(ach));
+
+  // Convert back to ACEScct
+  float3 crgb = make_float3(
+    lin_to_acescct(comprLinAP1.x),
+    lin_to_acescct(comprLinAP1.y),
+    lin_to_acescct(comprLinAP1.z));
+
+  // write output
+  return crgb;
+}

@@ -1,0 +1,215 @@
+set cut_paste_input [stack 0]
+push $cut_paste_input
+Group {
+ name ACES_RGC
+ label "\[value direction]"
+ selected true
+ xpos -6
+ ypos -44
+ addUserKnob {20 GamutCompress l "ACES 1.3 RGC"}
+ addUserKnob {4 direction M {forward inverse}}
+ addUserKnob {20 info_tab l Info}
+ addUserKnob {26 info_label l " " T "<style> a:link \{ color: #ccc \}</style>\n<font color=#ccc>\n<b>ACES 1.3 Reference Gamut Compression</b><br>\nMaps out of gamut colors back into AP1.<br><br>Input image data is expected to be ACEScg.\n<br><br>Based on:<br><a href=https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.GamutCompress.ctl>https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.GamutCompress.ctl</a>"}
+}
+ Input {
+  inputs 0
+  name Input
+  xpos -40
+  ypos -274
+ }
+ Dot {
+  name Dot4
+  xpos -6
+  ypos -174
+ }
+set N2666e000 [stack 0]
+ Dot {
+  name Dot2
+  xpos -226
+  ypos -174
+ }
+ Expression {
+  channel0 {rgba.red rgba.green rgba.blue none}
+  expr0 max(r,g,b)
+  name achromatic
+  xpos -260
+  ypos -130
+ }
+set N2666d800 [stack 0]
+ Dot {
+  name Dot1
+  xpos -226
+  ypos -78
+ }
+set N2666d000 [stack 0]
+ Dot {
+  name Dot3
+  xpos -226
+  ypos 234
+ }
+push $N2666d000
+ Expression {
+  expr0 abs(r)
+  expr1 abs(g)
+  expr2 abs(b)
+  name abs
+  xpos -167
+  ypos -81
+ }
+set N2666cc00 [stack 0]
+ Dot {
+  name Dot7
+  xpos -133
+  ypos 185
+ }
+push $N2666d800
+push $N2666e000
+ Merge2 {
+  inputs 2
+  operation minus
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge1
+  xpos -40
+  ypos -130
+ }
+push $N2666cc00
+ Merge2 {
+  inputs 2
+  operation divide
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge2
+  xpos -40
+  ypos -82
+ }
+ Group {
+  name compress
+  xpos -40
+  ypos 62
+  addUserKnob {20 compress}
+  addUserKnob {18 threshold R 0.4 1}
+  threshold {0.815 0.803 0.88}
+  addUserKnob {6 threshold_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+  addUserKnob {7 power R 1 3}
+  power 1.2
+  addUserKnob {7 cyan}
+  cyan 0.147
+  addUserKnob {7 magenta}
+  magenta 0.264
+  addUserKnob {7 yellow}
+  yellow 0.312
+  addUserKnob {26 ""}
+  addUserKnob {26 ""}
+  addUserKnob {6 invert +STARTLINE}
+  invert {{parent.direction}}
+ }
+  Input {
+   inputs 0
+   name Input
+   xpos -40
+   ypos -130
+  }
+  Dot {
+   name Dot2
+   xpos -6
+   ypos -30
+  }
+set N26619000 [stack 0]
+  Dot {
+   name Dot1
+   xpos 434
+   ypos -30
+  }
+  Expression {
+   expr0 (r<thr.r||lim.r<1.0001||r>thr.r+s.r)?r:thr.r+s.r*pow(-(pow((r-thr.r)/s.r,p)/(pow((r-thr.r)/s.r,p)-1)),1/p)
+   expr1 (g<thr.g||lim.g<1.0001||g>thr.g+s.g)?g:thr.g+s.g*pow(-(pow((g-thr.g)/s.g,p)/(pow((g-thr.g)/s.g,p)-1)),1/p)
+   expr2 (b<thr.b||lim.b<1.0001||b>thr.b+s.b)?b:thr.b+s.b*pow(-(pow((b-thr.b)/s.b,p)/(pow((b-thr.b)/s.b,p)-1)),1/p)
+   name uncompress_power
+   xpos 400
+   ypos 50
+   addUserKnob {20 Params_tab l Params}
+   addUserKnob {18 thr}
+   thr {{min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)} {min(0.9999,parent.threshold)}}
+   addUserKnob {6 thr_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 lim}
+   lim {{parent.cyan+1} {parent.magenta+1} {parent.yellow+1}}
+   addUserKnob {6 lim_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 s}
+   s {{(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)}}
+   addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {7 p R 1 5}
+   p {{parent.power}}
+  }
+push $N26619000
+  Dot {
+   name Dot6
+   xpos -446
+   ypos -30
+  }
+  Expression {
+   expr0 (r<thr.r||lim.r<1.0001)?r:thr.r+s.r*((r-thr.r)/s.r)/(pow(1+pow((r-thr.r)/s.r,p),1/p))
+   expr1 (g<thr.g||lim.g<1.0001)?g:thr.g+s.g*((g-thr.g)/s.g)/(pow(1+pow((g-thr.g)/s.g,p),1/p))
+   expr2 (b<thr.b||lim.b<1.0001)?b:thr.b+s.b*((b-thr.b)/s.b)/(pow(1+pow((b-thr.b)/s.b,p),1/p))
+   name compress_power1
+   xpos -480
+   ypos 38
+   addUserKnob {20 Params_tab l Params}
+   addUserKnob {18 thr}
+   thr {{"min(0.9999, parent.threshold)"} {"min(0.9999, parent.threshold)"} {"min(0.9999, parent.threshold)"}}
+   addUserKnob {6 thr_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 lim}
+   lim {{parent.cyan+1} {parent.magenta+1} {parent.yellow+1}}
+   addUserKnob {6 lim_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {18 s}
+   s {{(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)} {(lim-thr)/pow(pow((1-thr)/(lim-thr),-p)-1,1/p)}}
+   addUserKnob {6 s_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+   addUserKnob {7 p R 1 5}
+   p {{parent.power}}
+  }
+  Switch {
+   inputs 2
+   which {{parent.invert}}
+   name switch_reverse
+   xpos -40
+   ypos 230
+  }
+  Output {
+   name Output
+   xpos -40
+   ypos 326
+  }
+ end_group
+ Merge2 {
+  inputs 2
+  operation multiply
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge3
+  xpos -40
+  ypos 182
+ }
+ Merge2 {
+  inputs 2
+  operation minus
+  bbox B
+  Achannels rgb
+  Bchannels rgb
+  output rgb
+  name Merge5
+  selected true
+  xpos -40
+  ypos 230
+ }
+ Output {
+  name Output
+  xpos -40
+  ypos 302
+ }
+end_group

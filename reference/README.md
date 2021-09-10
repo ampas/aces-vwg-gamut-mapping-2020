@@ -9,4 +9,4 @@ These implementations are:
 * Python - An implementation which operates on NumPy arrays.
 * Resolve - A DCTL implementation which can be applied either through the LUT menu or through the DCTL OFX to allow use of the ***direction*** control.
 
-These implementations are intended as a stop-gap, and should be considered deprecated once the algorithm is either implemented natively in a particular DCC, or OCIO 2.1+ is supported.
+These implementations are intended only as a stop-gap, and should be considered deprecated once the algorithm is either implemented natively in a particular DCC, or OCIO 2.1+ is supported.

@@ -1,6 +1,6 @@
   
-// <ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.GamutCompress.a1.3.0</ACEStransformID>
-// <ACESuserName>ACES 1.3 Look - Gamut Compress</ACESuserName>
+// <ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.ReferenceGamutCompress.a1.v1.0</ACEStransformID>
+// <ACESuserName>ACES 1.3 Look - Reference Gamut Compress</ACESuserName>
 
 //
 // Gamut compression algorithm to bring out-of-gamut scene-referred values into AP1
@@ -9,9 +9,9 @@
 uniform sampler2D frontTex, matteTex, selectiveTex;
 uniform float adsk_result_w, adsk_result_h;
 uniform int direction;
-uniform int working_colorspace;
+uniform int inout_colorspace;
 
-/* --- Gamut Compress Parameters --- */
+// --- Gamut Compress Parameters --- 
 // Distance from achromatic which will be compressed to the gamut boundary
 // Values calculated to encompass the encoding gamuts of common digital cinema cameras
 const float LIM_CYAN =  1.147;
@@ -91,7 +91,7 @@ void main() {
   float alpha = texture2D(matteTex, coords).g;
   float select = texture2D(selectiveTex, coords).g;
 
-  if (working_colorspace == 1) {
+  if (inout_colorspace == 1) {
     rgb.x = acescct_to_lin(rgb.x);
     rgb.y = acescct_to_lin(rgb.y);
     rgb.z = acescct_to_lin(rgb.z);
@@ -120,7 +120,7 @@ void main() {
     ach - comprDist.y * abs(ach),
     ach - comprDist.z * abs(ach));
 
-  if (working_colorspace == 1) {
+  if (inout_colorspace == 1) {
     crgb.x = lin_to_acescct(crgb.x);
     crgb.y = lin_to_acescct(crgb.y);
     crgb.z = lin_to_acescct(crgb.z);

@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Gamut Compress
+ACES 1.3 Reference Gamut Compression
 ==============
+Gamut compression algorithm to bring out-of-gamut scene-referred values into the ACEScg gamut (AP1).
+
+Based on https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.ReferenceGamutCompress.ctl
+
+<ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.ReferenceGamutCompress.a1.v1.0</ACEStransformID>
+<ACESuserName>ACES 1.3 Look - Reference Gamut Compress</ACESuserName>
 """
 
 from __future__ import division, unicode_literals
@@ -9,12 +15,6 @@ from __future__ import division, unicode_literals
 import numpy as np
 
 __all__ = ['compression_function', 'gamut_compression_operator']
-
-# *****************************************************************************
-# Preserving as much as possible of the "GamutCompress.glsl" file formatting.
-# The bisection code could be removed entirely and replaced with "np.solve".
-# This is not Pythonic nor great but will make update subsequent easier.
-# *****************************************************************************
 
 
 # yapf: disable
@@ -64,22 +64,3 @@ def main(rgb, invert=False, threshold=[0.815, 0.803, 0.88], cyan=0.147, magenta=
 
 compression_function = compress
 gamut_compression_operator = main
-
-
-def generate_test_images(samples=16):
-    try:
-        import colour
-    except:
-        print(
-            '"colour-science" must be installed to generate the test images!')
-        return
-
-    np.random.seed(4)
-    RGB = (np.random.random([samples, samples, 3]) - 0.5) * 4
-    name_template = 'Gamut_Compress_{0}.exr'
-    colour.write_image(RGB, name_template.format('Reference'))
-    colour.write_image(gamut_compression_operator(RGB), name_template.format('PowerP'))
-
-
-if __name__ == '__main__':
-    generate_test_images()

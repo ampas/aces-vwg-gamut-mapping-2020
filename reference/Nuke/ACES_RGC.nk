@@ -6,10 +6,10 @@ Group {
  selected true
  xpos -6
  ypos -44
- addUserKnob {20 GamutCompress l "ACES 1.3 RGC"}
+ addUserKnob {20 GamutCompress l "ACES 1.3 Reference Gamut Compression"}
  addUserKnob {4 direction M {forward inverse}}
  addUserKnob {20 info_tab l Info}
- addUserKnob {26 info_label l " " T "<style> a:link \{ color: #ccc \}</style>\n<font color=#ccc>\n<b>ACES 1.3 Reference Gamut Compression</b><br>\nMaps out of gamut colors back into AP1.<br><br>Input image data is expected to be ACEScg.\n<br><br>Based on:<br><a href=https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.GamutCompress.ctl>https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.GamutCompress.ctl</a>"}
+ addUserKnob {26 info_label l " " T "<style> a:link \{ color: #ccc \}</style>\n<font color=#ccc>\n<b>ACES 1.3 Reference Gamut Compression</b><br>\nMaps out of gamut colors back into AP1.<br><br>Input image data is expected to be ACEScg.\n<br><br>Based on:<br><a href=https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.ReferenceGamutCompress.ctl>https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.ReferenceGamutCompress.ctl</a>"}
 }
  Input {
   inputs 0

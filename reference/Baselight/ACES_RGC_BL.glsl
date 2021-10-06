@@ -1,6 +1,6 @@
   
-// <ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.GamutCompress.a1.3.0</ACEStransformID>
-// <ACESuserName>ACES 1.3 Look - Gamut Compress</ACESuserName>
+// <ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.ReferenceGamutCompress.a1.v1.0</ACEStransformID>
+// <ACESuserName>ACES 1.3 Look - Reference Gamut Compress</ACESuserName>
 
 //
 // Gamut compression algorithm to bring out-of-gamut scene-referred values into AP1
@@ -10,7 +10,7 @@ uniform sampler2D frontTex, matteTex, selectiveTex;
 uniform float adsk_result_w, adsk_result_h;
 uniform int direction;
 
-/* --- Gamut Compress Parameters --- */
+// --- Gamut Compress Parameters --- 
 // Distance from achromatic which will be compressed to the gamut boundary
 // Values calculated to encompass the encoding gamuts of common digital cinema cameras
 const float LIM_CYAN =  1.147;

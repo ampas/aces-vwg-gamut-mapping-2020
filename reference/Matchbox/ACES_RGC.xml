@@ -10,15 +10,15 @@
   SoftwareVersion="2017.0.0"
   LimitInputsToTexture="True"
   Version="0.6"
-  Description="ACES Reference Gamut Compression
-Gamut compression algorithm to bring out-of-gamut scene-referred values into AP1.
+  Description="ACES 1.3 Reference Gamut Compression
+Gamut compression algorithm to bring out-of-gamut scene-referred values into the ACEScg gamut (AP1).
 
-Besed on https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.GamutCompress.ctl
+Based on https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.ReferenceGamutCompress.ctl
 
-<ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.GamutCompress.a1.3.0</ACEStransformID>
-<ACESuserName>ACES 1.3 Look - Gamut Compress</ACESuserName>
+<ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.ReferenceGamutCompress.a1.v1.0</ACEStransformID>
+<ACESuserName>ACES 1.3 Look - Reference Gamut Compress</ACESuserName>
 "
-  Name="ACES Reference Gamut Compression">
+  Name="ACES Ref Gamut Comp">
 
   <Shader Clear="0" GridSubdivision="1" OutputBitDepth="Output" Index="1">
       <Uniform Index="0" NoInput="Error" Tooltip="" DisplayName="Front" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_REPEAT" GL_TEXTURE_WRAP_S="GL_REPEAT" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="frontTex" InputType="Front">
@@ -27,16 +27,16 @@ Besed on https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Acade
       </Uniform>
       <Uniform Index="2" NoInput="White" Tooltip="" DisplayName="Matte" Mipmaps="False" GL_TEXTURE_WRAP_T="GL_REPEAT" GL_TEXTURE_WRAP_S="GL_REPEAT" GL_TEXTURE_MAG_FILTER="GL_LINEAR" GL_TEXTURE_MIN_FILTER="GL_LINEAR" Type="sampler2D" Name="matteTex" InputType="Matte">
       </Uniform>
-      <Uniform Row="1" Col="0" Page="0" Default="0" Inc="1" Tooltip="" Type="int" ChannelName="working_colorspace" DisplayName="working space" Name="working_colorspace" ValueType="Popup">
+      <Uniform Row="1" Col="0" Page="0" Default="0" Inc="1" Tooltip="" Type="int" ChannelName="inout_colorspace" DisplayName="In/Out Space" Name="inout_colorspace" ValueType="Popup">
         <PopupEntry Title="ACEScg" Value="0">
         </PopupEntry>
         <PopupEntry Title="ACEScct" Value="1">
         </PopupEntry>
       </Uniform>
-      <Uniform Row="0" Col="0" Page="0" Default="2" Inc="1" Tooltip="" Type="int" ChannelName="direction" DisplayName="direction" Name="direction" ValueType="Popup">
-        <PopupEntry Title="forward" Value="0">
+      <Uniform Row="0" Col="0" Page="0" Default="0" Inc="1" Tooltip="" Type="int" ChannelName="direction" DisplayName="Direction" Name="direction" ValueType="Popup">
+        <PopupEntry Title="Forward" Value="0">
         </PopupEntry>
-        <PopupEntry Title="inverse" Value="1">
+        <PopupEntry Title="Inverse" Value="1">
         </PopupEntry>
       </Uniform>
    </Shader>

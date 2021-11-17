@@ -28,6 +28,19 @@ const float THR_YELLOW = 0.880;
 // Aggressiveness of the compression curve
 const float PWR = 1.2;
 
+// ACES primaries conversion matrices
+const mat3 AP0_to_AP1 = mat3(
+   1.4514393161, -0.0765537734,  0.0083161484,
+  -0.2365107469,  1.1762296998, -0.0060324498,
+  -0.2149285693, -0.0996759264,  0.9977163014
+);
+
+const mat3 AP1_to_AP0 = mat3(
+   0.6954522414,  0.0447945634, -0.0055258826,
+   0.1406786965,  0.8596711185,  0.0040252103,
+   0.1638690622,  0.0955343182,  1.0015006723
+);
+
 // convert acescg to acescct
 float lin_to_acescct(float val) {
   if (val <= 0.0078125) {
@@ -97,6 +110,10 @@ void main() {
     rgb.z = acescct_to_lin(rgb.z);
   }
 
+  if (inout_colorspace == 2) {
+    rgb = AP0_to_AP1 * rgb;
+  }
+
   // achromatic axis 
   float ach = max(rgb.x, max(rgb.y, rgb.z));
 
@@ -124,6 +141,10 @@ void main() {
     crgb.x = lin_to_acescct(crgb.x);
     crgb.y = lin_to_acescct(crgb.y);
     crgb.z = lin_to_acescct(crgb.z);
+  }
+
+  if (inout_colorspace == 2) {
+    crgb = AP1_to_AP0 * crgb;
   }
 
   crgb = mix(rgb, crgb, select);

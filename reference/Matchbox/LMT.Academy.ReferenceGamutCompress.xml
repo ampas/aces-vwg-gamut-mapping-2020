@@ -14,9 +14,6 @@
 Gamut compression algorithm to bring out-of-gamut scene-referred values into the ACEScg gamut (AP1).
 
 Based on https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Academy.ReferenceGamutCompress.ctl
-
-<ACEStransformID>urn:ampas:aces:transformId:v1.5:LMT.Academy.ReferenceGamutCompress.a1.v1.0</ACEStransformID>
-<ACESuserName>ACES 1.3 Look - Reference Gamut Compress</ACESuserName>
 "
   Name="ACES Ref Gamut Comp">
 
@@ -31,6 +28,8 @@ Based on https://github.com/ampas/aces-dev/blob/dev/transforms/ctl/lmt/LMT.Acade
         <PopupEntry Title="ACEScg" Value="0">
         </PopupEntry>
         <PopupEntry Title="ACEScct" Value="1">
+        </PopupEntry>
+        <PopupEntry Title="ACES2065-1" Value="2">
         </PopupEntry>
       </Uniform>
       <Uniform Row="0" Col="0" Page="0" Default="0" Inc="1" Tooltip="" Type="int" ChannelName="direction" DisplayName="Direction" Name="direction" ValueType="Popup">

@@ -6,6 +6,12 @@ The Virtual Working Group proposal can be read in this [document](https://commun
 
 A [Dropbox Workspace](https://aces.mp/GamutVWGDocs) is available as the central location for sharing resources.
 
+## Reference Implementations
+
+In order to make the ACES 1.3 **Reference Gamut Compression** available prior to its wider native implementation in DCCs, a set of implementations in various forms is available in the [reference](./reference) folder of this repo.
+
+These implementations are intended only as a stop-gap, and should be considered deprecated once the algorithm is either implemented natively in a particular DCC, or OCIO 2.1+ is supported.
+
 ## Installation
 
 ```shell
